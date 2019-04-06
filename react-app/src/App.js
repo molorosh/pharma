@@ -1,28 +1,37 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import Drug from './Drug';
 import './App.css';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+        units: ["pill(s)","mg","ml"],
+    }
+}
+
   render() {
+    const units = this.state.units.slice();
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <div className="App-header-div">
+            <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
+            <div className="App-header-div-title"><h1>Pharma</h1></div>
+          </div>
         </header>
+        <section>
+            <h2>Medicine</h2>
+            <ul>
+              <li>[TODO] medicine details, dose and start date and time</li>
+            </ul>
+            <Drug units={units}></Drug>
+          </section>  
       </div>
     );
   }
+
 }
 
 export default App;
