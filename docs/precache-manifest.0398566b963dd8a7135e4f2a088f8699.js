@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/pharma/static/css/main.28a1950c.chunk.css"
   },
   {
-    "revision": "f7c27ae1517fd71781925a45ff88046e",
+    "revision": "b85e8f6e19ce8c9e94e510119ff01711",
     "url": "/pharma/index.html"
   }
 ];
