@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 //import { parentPort } from 'worker_threads';
 
 class DrugSchedule extends Component {
+    /*
     constructor(props){
-        super(props);/*
+        super(props);
         this.state = {
             id: props.id,
             hour: props.hour,
@@ -11,8 +12,9 @@ class DrugSchedule extends Component {
             amount: props.amount,
             everyNdays: props.everyNdays,
             isChanged: false,
-        };*/
+        };
     }
+    */
 
     formatTo00(val){
         if(val < 10){

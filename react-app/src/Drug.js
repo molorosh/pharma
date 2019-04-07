@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import DrugSchedule from './DrugSchedule';
+import DateTimePicker from './DateTimePicker';
 
 class Drug extends Component {
     constructor(props){
+        console.log("constructor(Drug.js)");
         super(props);
         this.state = {
             name: "",
@@ -11,6 +13,7 @@ class Drug extends Component {
             timestamp: undefined, 
             schedules: [],  
             nextId: 1,
+            dummyDateString: "2008-08-28T23:30"
         }
         // drug events
         this.handleChangeUnit = this.handleChangeUnit.bind(this);
@@ -21,6 +24,20 @@ class Drug extends Component {
         this.addNewSchedule = this.addNewSchedule.bind(this);
         this.handleDrugScheduleDelete = this.handleDrugScheduleDelete.bind(this);
         this.handleDrugScheduleUpdate = this.handleDrugScheduleUpdate.bind(this);
+        // DatePicker events
+        this.handleDatePickerChange = this.handleDatePickerChange.bind(this);
+    }
+
+    handleDatePickerChange(dateString){
+        console.log("handleDatePickerChange(...)");
+        console.log("dateString:");
+        console.log(dateString);
+        this.setState(
+            {dummyDateString: dateString}
+            , ()=> {
+                console.log("finished update");
+            }
+        );
     }
 
     handleChangeUnit(event){
@@ -59,6 +76,7 @@ class Drug extends Component {
     }
 
     render(){
+        console.log("Render(Drug.js)");
         const units = this.props.units.slice();
         const schedules = this.state.schedules.slice();
         return (
@@ -78,7 +96,21 @@ class Drug extends Component {
                         </select>
                     </p>
                     <p>as at: {this.state.timestamp}</p>
+                    
+                    <p>dummyDateString: {this.state.dummyDateString}</p>
                     <p><input type="datetime" /></p>
+                    <DateTimePicker 
+                        title="as at"
+                        isEdit={false}
+                        isEditable={true}
+                        value={this.state.dummyDateString}
+                        onChange={this.handleDatePickerChange}
+                        // updating with a key is a great and simple
+                        // way to ensure the child component is redrawn
+                        // from scratch if the principal data is changed
+                        key={this.state.dummyDateString}
+                        >
+                    </DateTimePicker>
                     <h2>Schedules</h2>
                     <p><button onClick={this.addNewSchedule}>Add Schedule</button></p>
                     {
