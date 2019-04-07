@@ -279,22 +279,8 @@ class DateTimePicker extends Component {
         }
         return(
             <div>
-                <p><code>DateTimerPicker (</code></p>
-                <ul>
-                    <li>isEdit: {this.state.isEdit?"Yes":"No"}, </li>
-                    <li>isEditable: {this.state.isEditable?"Yes":"No"}, </li>
-                    <li>value: {this.state.value},</li>
-                    <li>currentYear: {this.state.currentYear}</li>
-                    <li>currentMonth: {this.state.currentMonth}</li>
-                    <li>currentDay: {this.state.currentDay}</li>
-                    <li>currentHours: {this.state.currentHours}</li>
-                    <li>currentMinutes: {this.state.currentMinutes}</li>
-                </ul>
-                <p><code>)</code></p>
-                <hr></hr>
                 {editControl}
                 {readControl}
-                <hr></hr>
             </div>
         );
     }

@@ -95,10 +95,11 @@ class Drug extends Component {
                             })}
                         </select>
                     </p>
-                    <p>as at: {this.state.timestamp}</p>
                     
+                    <hr></hr>
+                    <h4>DateTimePicker</h4>
+                    <p>This is a small date time picker componnent:</p>
                     <p>dummyDateString: {this.state.dummyDateString}</p>
-                    <p><input type="datetime" /></p>
                     <DateTimePicker 
                         title="as at"
                         isEdit={false}
@@ -111,6 +112,7 @@ class Drug extends Component {
                         key={this.state.dummyDateString}
                         >
                     </DateTimePicker>
+                    <hr></hr>
                     <h2>Schedules</h2>
                     <p><button onClick={this.addNewSchedule}>Add Schedule</button></p>
                     {
