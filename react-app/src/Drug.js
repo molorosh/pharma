@@ -4,7 +4,6 @@ import DateTimePicker from './DateTimePicker';
 
 class Drug extends Component {
     constructor(props){
-        console.log("constructor(Drug.js)");
         super(props);
         this.state = {
             name: "",
@@ -76,7 +75,6 @@ class Drug extends Component {
     }
 
     render(){
-        console.log("Render(Drug.js)");
         const units = this.props.units.slice();
         const schedules = this.state.schedules.slice();
         return (
@@ -95,11 +93,9 @@ class Drug extends Component {
                             })}
                         </select>
                     </p>
-                    
                     <hr></hr>
                     <h4>DateTimePicker</h4>
-                    <p>This is a small date time picker componnent:</p>
-                    <p>dummyDateString: {this.state.dummyDateString}</p>
+                    <p>date time data: {this.state.dummyDateString}</p>
                     <DateTimePicker 
                         title="as at"
                         isEdit={false}

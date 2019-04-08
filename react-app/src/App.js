@@ -6,13 +6,12 @@ import './App.css';
 
 class App extends Component {
   constructor(props){
-    console.log("constructor(App.js)");
     super(props);
     this.state = {
         units: ["pill(s)","mg","ml"],
         colors: ["Pink","Orchid","Salmon","Orange","Khaki","Gainsboro"],
         icons: ["۝","۞","⊜","⊞","⊙","⊗"],
-        newUserName: undefined,
+        newUserName: '',
         newUserColor: "Pink",
         newUserIcon: "۝"
     }
@@ -23,10 +22,19 @@ class App extends Component {
     this.doChangeNewUserColor = this.doChangeNewUserColor.bind(this);
     this.doChangeNewUserIcon = this.doChangeNewUserIcon.bind(this);
     this.doAddNewUser = this.doAddNewUser.bind(this);
+    this.fetchAllUsers = this.fetchAllUsers.bind(this);
   }
 
   // this is called before the "render() method
   componentDidMount() {
+    this.fetchAllUsers();
+  }
+
+  isEmptyOrSpaces(str){
+    return str === null || str.match(/^ *$/) !== null;
+  }
+
+  fetchAllUsers(){
     db.table('persons')
       .toArray()
       .then((persons) => {
@@ -35,17 +43,19 @@ class App extends Component {
   }
 
   doAddNewUser(){
-    let n = this.state.newUserName;
-    let c = this.state.newUserColor;
-    let i = this.state.newUserIcon;
-    alert(n + " " + i + " " + c);
-    const person = {
-      name: n,
-      icon: i,
-      color: c
-    };
-    db.table('persons')
-      .add(person);
+    const n = this.state.newUserName;
+    const c = this.state.newUserColor;
+    const i = this.state.newUserIcon;
+    if(!this.isEmptyOrSpaces(n)){
+      const person = {
+        name: n,
+        icon: i,
+        color: c
+      };
+      db.table('persons')
+        .add(person)
+        .then(this.fetchAllUsers());
+    }
       //.then((id) => {
       //  const newList = [...this.persons.todos, Object.assign({}, todo, { id })];
       //  this.setState({ todos: newList });
@@ -77,7 +87,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("Render(App.js)");
     const units = this.state.units.slice();
     const cc = this.state.colors.slice();
     const colors = cc.map(
@@ -85,7 +94,10 @@ class App extends Component {
           let inlineStyles={backgroundColor: n};
           return (<option style={inlineStyles} key={n} value={n}>{n}</option>);
         });
-    let selectColors = <select onChange={this.doChangeNewUserColor} value={this.state.newUserColor}>
+    let selectColorsStyle={
+      backgroundColor: this.state.newUserColor
+    };
+    let selectColors = <select style={selectColorsStyle} onChange={this.doChangeNewUserColor} value={this.state.newUserColor}>
         {colors}
     </select>
     const ii = this.state.icons.slice();
@@ -93,6 +105,22 @@ class App extends Component {
     let selectIcons = <select onChange={this.doChangeNewUserIcon} value={this.state.newUserIcon}>
         {icons}
     </select>
+
+      // persons
+      let personsHtml = null;
+      if(this.state.persons){
+        const pp = this.state.persons.slice();
+        personsHtml = pp.map((p) =>{
+            let style = { backgroundColor: p.color };
+            return (
+              <div key={p.id} className="pharma-person" style={style}>
+                <h1>{p.icon}{p.name}</h1>
+                <p><i>id={p.id}</i></p>
+              </div>
+            );
+        });
+      }
+      
     return (
       <div className="App">
         <header className="App-header">
@@ -101,21 +129,19 @@ class App extends Component {
             <div className="App-header-div-title"><h1>Pharma</h1></div>
           </div>
         </header>
-        <section>
-            <h2>Disclaimer</h2>
-            <p>This is currently an un-finished app.  It should not be considered stable.  It's where I am learning about building apps and components in React.js</p>
-            <h2>App UX</h2>
+        <section className="AppSection">
             <h3>Persons</h3>
             <div>
               <p>
-                  nickname:<input type="text" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
+                  initials:<input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
                   color:{selectColors}
                   icon:{selectIcons}
-                  <button onClick={this.doAddNewUser}>Add</button>
+                  <button className="pharma-btn pharma-btn-add" onClick={this.doAddNewUser}>Add</button>
               </p>
+              {personsHtml}
             </div>
+            <hr></hr>
             <h3>Drug</h3>
-            <p><code>This is a simple drug component...</code></p>
             <Drug units={units}></Drug>
           </section>  
       </div>

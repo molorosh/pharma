@@ -10,7 +10,6 @@ import React, { Component } from 'react';
 
 class DateTimePicker extends Component {
     constructor(props){
-        console.log("constructor(DateTimePicker.js)");
         super(props);
         let hours = undefined;
         let year = undefined;
@@ -140,6 +139,7 @@ class DateTimePicker extends Component {
     doUpdate(){
         let formatted = this.stringForCurrentDate();
         this.props.onChange(formatted);
+        this.setState({isEdit:false})
     }
 
     doChangeHours(event){
@@ -203,7 +203,6 @@ class DateTimePicker extends Component {
     }
 
     render(){
-        console.log("Render(DateTimePicker.js)");
         let parsedDate = this.dateFromFormattedString(this.state.value);
         let parsedDateString = null;
         if(parsedDate !== null){
@@ -252,27 +251,27 @@ class DateTimePicker extends Component {
             </select>
             editControl = <span>
             <p>
-                {this.props.title}:     
-                Year: {selectYear}
-                Month: {selectMonth}
-                Day: {selectDay}
-                Hours: {selectHours}
-                Minutes: {selectMinutes}
-                <button onClick={this.doUpdate}>Update</button>
-                <button onClick={this.doCancel}>Cancel</button>
+                <span className="pharma-control-title">{this.props.title}</span>:     
+                {selectYear}-
+                {selectMonth}-
+                {selectDay}T
+                {selectHours}:
+                {selectMinutes}
+                <button className="pharma-btn pharma-btn-update"  onClick={this.doUpdate}>Update</button>
+                <button className="pharma-btn pharma-btn-cancel"  onClick={this.doCancel}>Cancel</button>
             </p>
             </span>
         }else{
             if(this.state.isEditable){
                 readControl = <span>
                 <p>
-                {this.props.title}: {parsedDateString}
-                     <button onClick={this.doEdit}>Edit</button>
+                    <span className="pharma-control-title">{this.props.title}</span>: {parsedDateString}
+                    <button className="pharma-btn pharma-btn-edit" onClick={this.doEdit}>Edit</button>
                 </p>
             </span>    
             }else{
                 readControl = <span>
-                <p>{this.props.title}: {parsedDateString}</p>
+                <p><span className="pharma-control-title">{this.props.title}</span>:  {parsedDateString}</p>
             </span>
             }
             

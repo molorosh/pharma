@@ -40,6 +40,10 @@
   color: #61dafb;
 }
 
+section.AppSection {
+  margin: 0px 20px 20px 0px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -47,4 +51,75 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+div.pharma-person {
+  text-align: justify;
+  padding-left: 1em;
+}
+
+.pharma-control-title{
+  font-weight: bold;
+}
+
+.pharma-btn {
+  display: inline-block;
+  border: none;
+  border-radius: 10px;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  text-decoration: none;
+  background: #0069ed;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  filter: saturate(0.70);
+}
+
+.pharma-btn:hover,
+.pharma-btn:focus {
+    /*background: #0053ba;
+    color: white;*/
+    filter: saturate(0.90);
+}
+
+.pharma-btn:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+.pharma-btn:active {
+  transform: scale(0.99);
+  filter: saturate(0.99);
+}
+
+.pharma-btn-add {
+  background-color: violet;
+  color: black;
+}
+
+.pharma-btn-edit {
+  background-color: aqua;
+  color: black;
+}
+
+.pharma-btn-update {
+  background-color: greenyellow;
+  color: black;
+}
+
+.pharma-btn-cancel {
+  background-color: orange;
+  color: black;
+}
+
+.pharma-btn-delete {
+  background-color: coral;
+  color: black;
 }
