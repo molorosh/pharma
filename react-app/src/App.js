@@ -131,7 +131,7 @@ class App extends Component {
           </div>
         </header>
         <section className="AppSection">
-            <h3>People</h3>
+            <h3>👥People</h3>
             <div>
               <p>
                   initials:<input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
@@ -142,7 +142,7 @@ class App extends Component {
               {personsHtml}
             </div>
             <hr></hr>
-            <h3>Drug</h3>
+            <h3>💊Drug</h3>
             <Drug units={units}></Drug>
           </section>
           <footer className="App-footer">
