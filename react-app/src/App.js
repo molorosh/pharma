@@ -13,7 +13,8 @@ class App extends Component {
         icons: ["۝","۞","⊜","⊞","⊙","⊗"],
         newUserName: '',
         newUserColor: "Pink",
-        newUserIcon: "۝"
+        newUserIcon: "۝",
+        version: "0.1.0.0"
     }
     // must bind functions that require 'this.' e.g. 
     // this.setState({isEdit: false}});
@@ -130,7 +131,7 @@ class App extends Component {
           </div>
         </header>
         <section className="AppSection">
-            <h3>Persons</h3>
+            <h3>People</h3>
             <div>
               <p>
                   initials:<input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
@@ -143,7 +144,13 @@ class App extends Component {
             <hr></hr>
             <h3>Drug</h3>
             <Drug units={units}></Drug>
-          </section>  
+          </section>
+          <footer className="App-footer">
+            <div className="App-footer-div">
+              <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
+              <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
+            </div>
+          </footer>
       </div>
     );
   }
