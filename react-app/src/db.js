@@ -12,7 +12,7 @@ export default db;
 //   id
 //   icon
 //   color
-//   
+//   name
 
 // meds
 //   id (1)
