@@ -14,7 +14,8 @@ class App extends Component {
         newUserName: '',
         newUserColor: "Pink",
         newUserIcon: "۝",
-        version: "0.1.0.0"
+        version: "0.1.0.0",
+        meds: [],
     }
     // must bind functions that require 'this.' e.g. 
     // this.setState({isEdit: false}});
@@ -23,24 +24,68 @@ class App extends Component {
     this.doChangeNewUserColor = this.doChangeNewUserColor.bind(this);
     this.doChangeNewUserIcon = this.doChangeNewUserIcon.bind(this);
     this.doAddNewUser = this.doAddNewUser.bind(this);
-    this.fetchAllUsers = this.fetchAllUsers.bind(this);
+    this.fetchAllData = this.fetchAllData.bind(this);
+    this.fetchOnlyUsers = this.fetchOnlyUsers.bind(this);
+    this.fetchOnlyMeds = this.fetchOnlyMeds.bind(this);
+    this.doAddNewMed = this.doAddNewMed.bind(this);
   }
 
   // this is called before the "render() method
   componentDidMount() {
-    this.fetchAllUsers();
+    this.fetchAllData();
   }
 
   isEmptyOrSpaces(str){
     return str === null || str.match(/^ *$/) !== null;
   }
 
-  fetchAllUsers(){
+  isSomething(str){
+    return !(str === null || str.match(/^ *$/) !== null);
+  }
+
+  fetchOnlyUsers(){
     db.table('persons')
       .toArray()
       .then((persons) => {
-        this.setState({ persons });
+        this.setState( { persons } )
       });
+  }
+
+  fetchOnlyMeds(){
+    db.table('meds')
+      .toArray()
+      .then((meds) => {
+        this.setState( { meds } )
+      });
+  }
+
+  fetchAllData(){
+    // although this works, it should be 
+    // re-written to use Dexie "all" promise API
+    // so we only update the React state once at the end
+    db.table('persons')
+      .toArray()
+      .then((persons) => {
+        this.setState( { persons }, this.fetchOnlyMeds() )
+      });
+  }
+
+  doAddNewMed(personId, newMedName){
+    if(this.isSomething(newMedName)){
+      const med = {
+        personId: personId,
+        name: newMedName,
+        strength: '500mg',
+        units: 'tablet(s)',
+        stockDate: '2019-01-02',
+        stockAmount: 16,
+        scheduleAmount: 2,
+        everyNdays: 2
+      };
+      db.table('meds')
+      .add(med)
+      .then(this.fetchAllData());
+    }
   }
 
   doAddNewUser(){
@@ -55,12 +100,8 @@ class App extends Component {
       };
       db.table('persons')
         .add(person)
-        .then(this.fetchAllUsers());
+        .then(this.fetchAllData());
     }
-      //.then((id) => {
-      //  const newList = [...this.persons.todos, Object.assign({}, todo, { id })];
-      //  this.setState({ todos: newList });
-      //});
   }
 
   handleChangeName(event){
@@ -107,16 +148,48 @@ class App extends Component {
         {icons}
     </select>
 
+      
       // persons
       let personsHtml = null;
+      let medsHtml = null;
       if(this.state.persons){
         const pp = this.state.persons.slice();
         personsHtml = pp.map((p) =>{
             let style = { backgroundColor: p.color };
+            // person drug list
+            let meds = this.state.meds.slice();
+            medsHtml = meds.map(
+              (m) => {
+                if(m.personId === p.id){
+                  return (<div key={m.id}>
+                    <p>mid: {m.id}</p>
+                    <p>name: {m.name}</p>
+                  </div>);
+                }else{
+                  return (undefined);
+                }
+              });
             return (
               <div key={p.id} className="pharma-person" style={style}>
                 <h1>{p.icon}{p.name}</h1>
                 <p><i>id={p.id}</i></p>
+                <h4><span role="img" aria-label="Medicine">💊</span>Drug</h4>
+                <p>
+                  name:<input id={'newMedName_' + p.id} type="text"></input> 
+                  <button className="pharma-btn pharma-btn-add" 
+                    onClick={
+                      () => {
+                        let newDrugName = '??';
+                        let elem = document.getElementById('newMedName_' + p.id);
+                        if(elem){
+                          newDrugName = elem.value;
+                          this.doAddNewMed(p.id, newDrugName);
+                        }
+                      }
+                    }
+                      >Add</button>
+                </p>
+                {medsHtml}
               </div>
             );
         });
@@ -131,7 +204,7 @@ class App extends Component {
           </div>
         </header>
         <section className="AppSection">
-            <h3>👥People</h3>
+            <h3><span role="img" aria-label="People">👥</span>People</h3>
             <div>
               <p>
                   initials:<input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
@@ -142,7 +215,7 @@ class App extends Component {
               {personsHtml}
             </div>
             <hr></hr>
-            <h3>💊Drug</h3>
+            <h3><span role="img" aria-label="Medicine">💊</span>Drug</h3>
             <Drug units={units}></Drug>
           </section>
           <footer className="App-footer">

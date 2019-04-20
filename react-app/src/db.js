@@ -4,18 +4,29 @@ import Dexie from 'dexie';
 // q.v. https://github.com/dfahlander/Dexie.js/blob/master/samples/react/src/db.js
 
 const db = new Dexie('MoloroshPharmaDB');
-db.version(1).stores({ persons: '++id' });
+// needs to keep the older schemas so Dexie can 
+// upgrade from the older version to the newer version
+db.version(1).stores(
+    { 
+        persons: '++id' 
+    });
+// the latest version of the database schema
+db.version(2).stores(
+    { 
+        persons: '++id',
+        meds: '++id,personId' 
+    });
 
 export default db;
 
 // persons:
-//   id
+//   ++id
 //   icon
 //   color
 //   name
 
 // meds
-//   id (1)
+//   ++id (1)
 //   personid (2)
 //   name ("aspirin")
 //   strength ("500mg")
