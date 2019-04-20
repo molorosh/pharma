@@ -28,6 +28,7 @@ class App extends Component {
     this.fetchOnlyUsers = this.fetchOnlyUsers.bind(this);
     this.fetchOnlyMeds = this.fetchOnlyMeds.bind(this);
     this.doAddNewMed = this.doAddNewMed.bind(this);
+    this.doMedsCalculations = this.doMedsCalculations.bind(this);
   }
 
   // this is called before the "render() method
@@ -55,6 +56,11 @@ class App extends Component {
     db.table('meds')
       .toArray()
       .then((meds) => {
+        if(meds && meds.length){
+          for(let x = 0, xMax = meds.length; x < xMax; x++){
+            this.doMedsCalculations(meds[x]);
+          }
+        }
         this.setState( { meds } )
       });
   }
@@ -68,6 +74,29 @@ class App extends Component {
       .then((persons) => {
         this.setState( { persons }, this.fetchOnlyMeds() )
       });
+  }
+
+  doMedsCalculations(med){
+    console.log("doMedsCalculations(...)");
+    console.log("med.scheduleAmount: " + med.scheduleAmount);
+    console.log("med.everyNdays: " + med.everyNdays);
+    console.log("med.stockDate: " + med.stockDate);
+    console.log("med.stockAmount: " + med.stockAmount);
+    let doses = med.stockAmount / med.scheduleAmount; 
+    let days = doses * med.everyNdays;
+    console.log("doses: " + doses);
+    console.log("days: " + days);
+    let dayFrom = new Date(Date.parse(med.stockDate + "T00:00:00Z"));
+    console.log("dayFrom: " + dayFrom.toLocaleDateString());
+    let now = new Date();
+    let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+    let until = new Date(dayFrom.valueOf());
+    until.setDate(until.getDate() + days);
+    console.log("today: " + today.toLocaleDateString());
+    console.log("until: " + until.toLocaleDateString());
+    let timeDiff = (until.getTime() - today.getTime());
+    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    console.log("dayDiff: " + dayDiff);
   }
 
   doAddNewMed(personId, newMedName){
