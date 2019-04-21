@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import db from './db';
-import Drug from './Drug';
 import './App.css';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-        units: ["pill(s)","mg","ml"],
+        units: ["tablets(s)","ml"],
         colors: ["Pink","Orchid","Salmon","Orange","Khaki","Gainsboro"],
         icons: ["۝","۞","⊜","⊞","⊙","⊗"],
         newUserName: '',
         newUserColor: "Pink",
         newUserIcon: "۝",
-        version: "0.1.0.0",
+        version: "0.2.0.0",
         meds: [],
     }
     // must bind functions that require 'this.' e.g. 
@@ -77,26 +76,15 @@ class App extends Component {
   }
 
   doMedsCalculations(med){
-    //console.log("doMedsCalculations(...)");
-    //console.log("med.scheduleAmount: " + med.scheduleAmount);
-    //console.log("med.everyNdays: " + med.everyNdays);
-    //console.log("med.stockDate: " + med.stockDate);
-    //console.log("med.stockAmount: " + med.stockAmount);
     let doses = med.stockAmount / med.scheduleAmount; 
     let days = doses * med.everyNdays;
-    //console.log("doses: " + doses);
-    //console.log("days: " + days);
     let dayFrom = new Date(Date.parse(med.stockDate + "T00:00:00Z"));
-    //console.log("dayFrom: " + dayFrom.toLocaleDateString());
     let now = new Date();
     let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
     let until = new Date(dayFrom.valueOf());
     until.setDate(until.getDate() + days);
-    //console.log("today: " + today.toLocaleDateString());
-    //console.log("until: " + until.toLocaleDateString());
     let timeDiff = (until.getTime() - today.getTime());
     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    //console.log("dayDiff: " + dayDiff);
     med.daysLeft = dayDiff;
     med.until = this.fromDateToDateString(until);
   }
@@ -108,13 +96,6 @@ class App extends Component {
     let medStock = document.getElementById('newMedStock_' + personId).value;
     let medEveryNDays = document.getElementById('newMedEveryNDays_' + personId).value;
     let newMedUnits = document.getElementById('newMedUnits_' + personId).value;
-
-    //console.log("medName: " + medName);
-    //console.log("medDose: " + medDose);
-    //console.log("medStrength: " + medStrength);
-    //console.log("medStock: " + medStock);
-    //console.log("medEveryNDays: " + medEveryNDays);
-    //console.log("newMedUnits: " + newMedUnits);
 
     if(this.isSomething(medName)){
       const med = {
@@ -194,6 +175,11 @@ class App extends Component {
 
   render() {
     const units = this.state.units.slice();
+    const unitOptions = units.map(
+      (a) => {
+        return (<option key={a} value={a}>{a}</option>)
+      }
+    );
     const cc = this.state.colors.slice();
     const colors = cc.map(
         (n) => {
@@ -211,8 +197,6 @@ class App extends Component {
     let selectIcons = <select onChange={this.doChangeNewUserIcon} value={this.state.newUserIcon}>
         {icons}
     </select>
-
-      
       // persons
       let personsHtml = null;
       let medsHtml = null;
@@ -225,31 +209,33 @@ class App extends Component {
             medsHtml = meds.map(
               (m) => {
                 if(m.personId === p.id){
-                  return (<div key={m.id}>
-                    <p>mid: {m.id}</p>
-                    <p>name: {m.name}</p>
-                    <p>days left: {m.daysLeft}</p>
-                    <p>until: {m.until}</p>
-                  </div>);
+                  return (
+                    <div className="pharma-person-medicine" key={m.id}>
+                      <p><strong>{m.name}</strong> <em>({m.strength})</em></p>
+                      <p>days left: <strong>{m.daysLeft}</strong> <em>({m.until})</em></p>
+                    </div>
+                    );
                 }else{
                   return (undefined);
                 }
               });
             return (
               <div key={p.id} className="pharma-person" style={style}>
-                <h1>{p.icon}{p.name}</h1>
-                <p><i>id={p.id}</i></p>
-                <h4><span role="img" aria-label="Medicine">💊</span>Drug</h4>
+                <h1>{p.icon} {p.name}</h1>
+                <h4><span role="img" aria-label="Medicine">💊</span> Medicines</h4>
+                <div className="pharma-add-new-medecine">
                 <p>
                   name: <input id={'newMedName_' + p.id} type="text"></input>
-                  units: <select defaultValue={"tablet(s)"} id={'newMedUnits_' + p.id}>
-                      <option value="tablet(s)">tablet(s)</option>
-                      <option value="ml">ml</option>
-                      <option value="floz">fl oz</option>
+                </p>
+                <p>units: <select defaultValue={"tablet(s)"} id={'newMedUnits_' + p.id}>
+                     {unitOptions}
                     </select> 
-                  strength: <input id={'newMedStrength_' + p.id} type="text"></input>
-                  dose: <input id={'newMedDose_' + p.id} type="text"></input>
-                  every 
+                    </p>
+                <p>strength: <input size="7" maxLength="7" id={'newMedStrength_' + p.id} type="text"></input>
+                </p>
+                <p>dose: <input size="7" maxLength="7" id={'newMedDose_' + p.id} type="text"></input>
+                </p>
+                <p>every 
                     <select defaultValue={"1"} id={'newMedEveryNDays_' + p.id}>
                       <option value="1">1</option>
                       <option value="1">2</option>
@@ -259,8 +245,10 @@ class App extends Component {
                       <option value="1">6</option>
                       <option value="1">7</option>
                     </select> days 
-                  stock level: <input id={'newMedStock_' + p.id} type="text"></input>
-                  <button className="pharma-btn pharma-btn-add" 
+                    </p>
+                <p>stock level: <input size="7" maxLength="7" id={'newMedStock_' + p.id} type="text"></input>
+                </p>
+                <p><button className="pharma-btn pharma-btn-add" 
                     onClick={
                       () => {
                         let newDrugName = '??';
@@ -273,7 +261,7 @@ class App extends Component {
                     }
                       >Add</button>
                 </p>
-                <p>{this.today()}</p>
+                </div>
                 {medsHtml}
               </div>
             );
@@ -289,7 +277,7 @@ class App extends Component {
           </div>
         </header>
         <section className="AppSection">
-            <h3><span role="img" aria-label="People">👥</span>People</h3>
+            <h3><span role="img" aria-label="People">👥</span> People</h3>
             <div>
               <p>
                   initials: <input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
@@ -299,9 +287,6 @@ class App extends Component {
               </p>
               {personsHtml}
             </div>
-            <hr></hr>
-            <h3><span role="img" aria-label="Medicine">💊</span>Drug</h3>
-            <Drug units={units}></Drug>
           </section>
           <footer className="App-footer">
             <div className="App-footer-div">

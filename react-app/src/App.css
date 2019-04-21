@@ -124,6 +124,22 @@ div.pharma-person {
   color: black;
 }
 
+.pharma-person {
+  padding-bottom: 20px;
+  padding-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 0px 20px 20px 0px;
+}
+
+.pharma-person-medicine {
+  border: solid 2px white;
+  background-color: #ffffff88;
+  border-radius: 15px 0px 0px 15px;
+  margin-left: 20px;
+  margin-bottom: 3px;
+  padding-left: 10px;
+}
+
 .App-footer {
   background-color: silver;
   min-height: 3vh;
