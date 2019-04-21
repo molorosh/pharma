@@ -8,19 +8,19 @@ self.__precacheManifest = [
     "url": "/pharma/static/js/runtime~main.ace989df.js"
   },
   {
-    "revision": "6ed7a42e33ec7cb041b2",
-    "url": "/pharma/static/js/main.550371c9.chunk.js"
+    "revision": "78a3a22e5b3beb601b71",
+    "url": "/pharma/static/js/main.b265053a.chunk.js"
   },
   {
     "revision": "79bcff58af7a570f2cc9",
     "url": "/pharma/static/js/2.a6e72026.chunk.js"
   },
   {
-    "revision": "6ed7a42e33ec7cb041b2",
+    "revision": "78a3a22e5b3beb601b71",
     "url": "/pharma/static/css/main.ebed1cbb.chunk.css"
   },
   {
-    "revision": "a8fc65ef5e0e139f3b932fc5fdb11e42",
+    "revision": "68e89181e4e0f12d82cbecc0e5a64638",
     "url": "/pharma/index.html"
   }
 ];
