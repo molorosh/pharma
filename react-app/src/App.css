@@ -140,6 +140,29 @@ div.pharma-person {
   padding-left: 10px;
 }
 
+.pharma-person-control {
+  margin: 20px;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.pharma-person-add {
+  background-color: green;
+}
+
+.pharma-person-edit {
+  background-color: blue;
+}
+
+.pharma-person-delete {
+  background-color: red;
+}
+
+p.pharma-delete-person-para {
+  float: right;
+  margin-right: 20px;
+}
+
 .App-footer {
   background-color: silver;
   min-height: 3vh;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import db from './db';
 import './App.css';
+import EditPerson from './EditPerson';
+import EditMedicine from './EditMedicine';
 
 class App extends Component {
   constructor(props){
@@ -10,24 +12,20 @@ class App extends Component {
         units: ["tablets(s)","ml"],
         colors: ["Pink","Orchid","Salmon","Orange","Khaki","Gainsboro"],
         icons: ["۝","۞","⊜","⊞","⊙","⊗"],
+        // mode: 'list','edit','delete'
+        mode: 'list',
+        // control: 'undefined', 'person', 'medicine'
+        control: undefined,
+        // personId: the primary key of the person to be added, edited or deleted
+        personId: undefined,
+        // medicineId: the primary key of the medicine to be added, edited or deleted
+        medicineId: undefined,
         newUserName: '',
         newUserColor: "Pink",
         newUserIcon: "۝",
-        version: "0.2.0.0",
+        version: "0.3.0.0",
         meds: [],
     }
-    // must bind functions that require 'this.' e.g. 
-    // this.setState({isEdit: false}});
-    this.handleChangeName = this.handleChangeName.bind(this);
-    this.doChangeNewUserName = this.doChangeNewUserName.bind(this);
-    this.doChangeNewUserColor = this.doChangeNewUserColor.bind(this);
-    this.doChangeNewUserIcon = this.doChangeNewUserIcon.bind(this);
-    this.doAddNewUser = this.doAddNewUser.bind(this);
-    this.fetchAllData = this.fetchAllData.bind(this);
-    this.fetchOnlyUsers = this.fetchOnlyUsers.bind(this);
-    this.fetchOnlyMeds = this.fetchOnlyMeds.bind(this);
-    this.doAddNewMed = this.doAddNewMed.bind(this);
-    this.doMedsCalculations = this.doMedsCalculations.bind(this);
   }
 
   // this is called before the "render() method
@@ -43,7 +41,40 @@ class App extends Component {
     return !(str === null || str.match(/^ *$/) !== null);
   }
 
-  fetchOnlyUsers(){
+  doCancelEdit = () => {
+    this.setState(
+      {
+        mode: 'list',
+        personId: undefined,
+        medicineId: undefined,
+        control: undefined
+      }
+    );
+  }
+
+  doEditUser = (personId) => {
+    this.setState(
+      {
+        mode: 'edit',
+        personId: personId,
+        medicineId: undefined,
+        control: 'person'
+      }
+    );
+  }
+
+  doDeleteUser = (personId) => {
+    this.setState(
+      {
+        mode: 'delete',
+        personId: personId,
+        medicineId: undefined,
+        control: 'person'
+      }
+    );
+  }
+
+  fetchOnlyUsers = () => {
     db.table('persons')
       .toArray()
       .then((persons) => {
@@ -51,7 +82,7 @@ class App extends Component {
       });
   }
 
-  fetchOnlyMeds(){
+  fetchOnlyMeds = () => {
     db.table('meds')
       .toArray()
       .then((meds) => {
@@ -64,18 +95,18 @@ class App extends Component {
       });
   }
 
-  fetchAllData(){
+  fetchAllData = () => {
     // although this works, it should be 
     // re-written to use Dexie "all" promise API
     // so we only update the React state once at the end
     db.table('persons')
       .toArray()
       .then((persons) => {
-        this.setState( { persons }, this.fetchOnlyMeds() )
+        this.setState( { persons, mode: 'list' }, this.fetchOnlyMeds() )
       });
   }
 
-  doMedsCalculations(med){
+  doMedsCalculations = (med) => {
     let doses = med.stockAmount / med.scheduleAmount; 
     let days = doses * med.everyNdays;
     let dayFrom = new Date(Date.parse(med.stockDate + "T00:00:00Z"));
@@ -89,7 +120,7 @@ class App extends Component {
     med.until = this.fromDateToDateString(until);
   }
 
-  doAddNewMed(personId){
+  doAddNewMed = (personId) => {
     let medName = document.getElementById('newMedName_' + personId).value;
     let medDose = document.getElementById('newMedDose_' + personId).value;
     let medStrength = document.getElementById('newMedStrength_' + personId).value;
@@ -114,47 +145,49 @@ class App extends Component {
     }
   }
 
-  doAddNewUser(){
-    const n = this.state.newUserName;
-    const c = this.state.newUserColor;
-    const i = this.state.newUserIcon;
-    if(!this.isEmptyOrSpaces(n)){
-      const person = {
-        name: n,
-        icon: i,
-        color: c
-      };
-      db.table('persons')
-        .add(person)
-        .then(this.fetchAllData());
-    }
+  callbackPersonDelete = (id) => {
+    alert("TODO::callbackPersonDelete(" + id + ")");
+    // delete the medicines
+    // delete the person
+    // refresh the data
   }
 
-  handleChangeName(event){
+  callbackPersonAdd = (name,icon,color) => {
+    const person = {
+      name: name,
+      icon: icon,
+      color: color
+    };
+    db.table('persons')
+      .add(person)
+      .then(this.fetchAllData());
+  }
+
+  handleChangeName = (event) => {
     this.setState(
       {newUserName: event.target.value}
     );
   }
 
-  doChangeNewUserName(event){
+  doChangeNewUserName = (event) => {
     this.setState(
       {newUserName: event.target.value}
     );
   }
 
-  doChangeNewUserIcon(event){
+  doChangeNewUserIcon = (event) => {
     this.setState(
       {newUserIcon: event.target.value}
     );
   }
   
-  doChangeNewUserColor(event){
+  doChangeNewUserColor = (event) => {
     this.setState(
       {newUserColor: event.target.value}
     );
   }
 
-  fromDateToDateString(date){
+  fromDateToDateString = (date) => {
     let output = date.getFullYear() + '-';
     let m = date.getMonth();
     if(m < 9){
@@ -169,34 +202,62 @@ class App extends Component {
     return output;
   }
 
-  today(){
+  today = () => {
     return(this.fromDateToDateString(new Date()));
   }
 
   render() {
+    if(this.state.mode !== "list" && this.state.control){
+      let editControl = undefined;
+      if(this.state.control === "person"){
+        editControl = (
+          <EditPerson
+            onCancel={this.doCancelEdit} 
+            mode={this.state.mode} 
+            personId={this.state.personId}
+            callbackPersonAdd={this.callbackPersonAdd}
+            callbackPersonDelete={this.callbackPersonDelete}
+            >
+          </EditPerson>
+        );
+      }else if(this.state.control === "medicine"){
+        editControl = (
+          <EditMedicine
+            onCancel={this.doCancelEdit} 
+            mode={this.state.mode} 
+            personId={this.state.personId}
+            medicineId={this.state.medicineId}
+            >
+          </EditMedicine>
+        );
+      }
+      return (
+        <div className="App">
+        <header className="App-header">
+          <div className="App-header-div">
+            <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
+            <div className="App-header-div-title"><h1>Pharma</h1></div>
+          </div>
+        </header>
+        <section className="AppSection">
+          {editControl}
+        </section>
+        <footer className="App-footer">
+            <div className="App-footer-div">
+              <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
+              <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
+            </div>
+          </footer>
+      </div>    
+      );
+    }
+
     const units = this.state.units.slice();
     const unitOptions = units.map(
       (a) => {
         return (<option key={a} value={a}>{a}</option>)
       }
     );
-    const cc = this.state.colors.slice();
-    const colors = cc.map(
-        (n) => {
-          let inlineStyles={backgroundColor: n};
-          return (<option style={inlineStyles} key={n} value={n}>{n}</option>);
-        });
-    let selectColorsStyle={
-      backgroundColor: this.state.newUserColor
-    };
-    let selectColors = <select style={selectColorsStyle} onChange={this.doChangeNewUserColor} value={this.state.newUserColor}>
-        {colors}
-    </select>
-    const ii = this.state.icons.slice();
-    const icons = ii.map((n) => <option key={n} value={n}>{n}</option>);
-    let selectIcons = <select onChange={this.doChangeNewUserIcon} value={this.state.newUserIcon}>
-        {icons}
-    </select>
       // persons
       let personsHtml = null;
       let medsHtml = null;
@@ -221,6 +282,15 @@ class App extends Component {
               });
             return (
               <div key={p.id} className="pharma-person" style={style}>
+                <p className="pharma-delete-person-para">
+                  <button
+                    onClick={
+                      () => {
+                        this.doDeleteUser(p.id);
+                      }
+                    } 
+                    className="pharma-btn pharma-btn-delete" >delete person</button>
+                </p>
                 <h1>{p.icon} {p.name}</h1>
                 <h4><span role="img" aria-label="Medicine">💊</span> Medicines</h4>
                 <div className="pharma-add-new-medecine">
@@ -278,13 +348,10 @@ class App extends Component {
         </header>
         <section className="AppSection">
             <h3><span role="img" aria-label="People">👥</span> People</h3>
+            <p>
+              <button className="pharma-btn pharma-btn-add" onClick={() => { this.doEditUser(undefined) }}>New Person</button>
+            </p>
             <div>
-              <p>
-                  initials: <input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
-                  color: {selectColors}
-                  icon: {selectIcons}
-                  <button className="pharma-btn pharma-btn-add" onClick={this.doAddNewUser}>Add</button>
-              </p>
               {personsHtml}
             </div>
           </section>
