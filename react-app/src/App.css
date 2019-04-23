@@ -81,6 +81,7 @@ div.pharma-person {
   -moz-appearance: none;
   filter: saturate(0.70);
   margin-left: 3px;
+  margin-bottom: 3px;
 }
 
 .pharma-btn:hover,
@@ -125,6 +126,11 @@ div.pharma-person {
   color: black;
 }
 
+.pharma-btn-restock {
+  background-color: yellow;
+  color: black;
+}
+
 .pharma-person {
   padding-bottom: 20px;
   padding-top: 5px;
@@ -143,7 +149,9 @@ div.pharma-person {
 
 .pharma-person-medicine-edit {
   float: right;
-  margin-right: 20px;
+  margin-top: 10px;
+  text-align: right;
+  margin-right: 10px;
 }
 
 .pharma-person-control {

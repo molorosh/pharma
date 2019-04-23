@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.state = {
         units: ["tablets(s)","ml"],
-        // mode: 'list','edit','delete'
+        // mode: 'list','edit','delete','add','restock'
         mode: 'list',
         // control: 'undefined', 'person', 'medicine'
         control: undefined,
@@ -41,6 +41,30 @@ class App extends Component {
     this.setState(
       {
         mode: 'edit',
+        personId: personId,
+        medicineId: medicineId,
+        control: 'medicine'
+      }
+    );
+  }
+
+  doDeleteMedicine = (personId, medicineId) => {
+    console.log("doDeleteMedicine(" + personId + "," + medicineId + ")");
+    this.setState(
+      {
+        mode: 'delete',
+        personId: personId,
+        medicineId: medicineId,
+        control: 'medicine'
+      }
+    );
+  }
+
+  doRestockMedicine = (personId, medicineId) => {
+    console.log("doRestockMedicine(" + personId + "," + medicineId + ")");
+    this.setState(
+      {
+        mode: 'restock',
         personId: personId,
         medicineId: medicineId,
         control: 'medicine'
@@ -294,6 +318,10 @@ class App extends Component {
             medsHtml = meds.map(
               (m) => {
                 if(m.personId === p.id){
+                  let strengthText = (<></>);
+                  if(this.isSomething(m.strength)){
+                    strengthText = (<em>({m.strength})</em>);
+                  }
                   return (
                     <div className="pharma-person-medicine" key={m.id}>
                       <p className="pharma-person-medicine-edit">
@@ -305,8 +333,27 @@ class App extends Component {
                           >
                             Edit Medicine
                         </button>
+                        <br/>
+                        <button 
+                          onClick={() => {
+                            this.doRestockMedicine(p.id, m.id);
+                          }} 
+                          className="pharma-btn pharma-btn-restock"
+                          >
+                            Restock Medicine
+                        </button>
+                        <br/>
+                        <button 
+                          onClick={() => {
+                            this.doDeleteMedicine(p.id, m.id);
+                          }} 
+                          className="pharma-btn pharma-btn-delete"
+                          >
+                            Delete Medicine
+                        </button>
                       </p>
-                      <p><strong>{m.name}</strong> <em>({m.strength})</em></p>
+                      <p><strong>{m.name}</strong> {strengthText}</p>
+                      <p>{m.scheduleAmount} {m.units} every {m.everyNdays} day(s)</p>
                       <p>days left: <strong>{m.daysLeft}</strong> <em>({m.until})</em></p>
                     </div>
                     );
@@ -327,6 +374,13 @@ class App extends Component {
                 </p>
                 <h1>{p.icon} {p.name}</h1>
                 <h4><span role="img" aria-label="Medicine">💊</span> Medicines</h4>
+                <p>
+                  <button 
+                    onClick={() => {this.doEditMedicine(p.id, undefined);}} 
+                    className="pharma-btn pharma-btn-add">
+                      Add Medicine
+                    </button>
+                  </p>
                 <div className="pharma-add-new-medecine">
                 <p>
                   name: <input id={'newMedName_' + p.id} type="text"></input>
