@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
 class EditMedecine extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
             personId: props.personId,
-            medicineId: props.medicineId
+            medicineId: props.medicineId,
         };
     }
 

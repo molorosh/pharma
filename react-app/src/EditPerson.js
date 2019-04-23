@@ -9,6 +9,7 @@ class EditPerson extends Component {
             newUserName: '',
             newUserColor: "Pink",
             newUserIcon: "۝",
+            errUserName: undefined,
             colors: ["Pink","Orchid","Salmon","Orange","Khaki","Gainsboro"],
             icons: ["۝","۞","⊜","⊞","⊙","⊗"],
         };
@@ -61,9 +62,22 @@ class EditPerson extends Component {
         const n = this.state.newUserName;
         const c = this.state.newUserColor;
         const i = this.state.newUserIcon;
-        if(this.isSomething(n)){
-            this.props.callbackPersonAdd(n, i, c);
+        let errUserName = undefined;
+        let errorTally = 0;
+        if(this.isEmptyOrSpaces(n)){
+            errUserName = "Please enter a username";
+            errorTally++;
         }
+        this.setState(
+            {
+                errUserName
+            },
+            () => {
+                if(errorTally === 0){
+                    this.props.callbackPersonAdd(n, i, c);
+                }
+            }
+        );
     }
 
     render(){
@@ -93,9 +107,43 @@ class EditPerson extends Component {
             </select>
             content = (
                 <>
-                    <p>initials: <input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} /></p>
-                    <p>color: {selectColors}</p>
-                    <p>icon: {selectIcons}</p>
+                    <table className="pharma-edit-layout">
+                        <tbody>
+                            <tr>
+                                <td className="pharma-edit-layout-label">
+                                    initials:
+                                </td>
+                                <td className="pharma-edit-layout-control">
+                                    <input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
+                                </td>
+                                <td className="pharma-edit-layout-error">
+                                    {this.state.errUserName}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="pharma-edit-layout-label">
+                                    color:
+                                </td>
+                                <td className="pharma-edit-layout-control">
+                                    {selectColors}
+                                </td>
+                                <td className="pharma-edit-layout-error">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="pharma-edit-layout-label">
+                                    icons:
+                                </td>
+                                <td className="pharma-edit-layout-control">
+                                    {selectIcons}
+                                </td>
+                                <td className="pharma-edit-layout-error">
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </>
             );
             otherButtons = (<button 

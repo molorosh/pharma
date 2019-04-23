@@ -80,6 +80,7 @@ div.pharma-person {
   -webkit-appearance: none;
   -moz-appearance: none;
   filter: saturate(0.70);
+  margin-left: 3px;
 }
 
 .pharma-btn:hover,
@@ -140,6 +141,11 @@ div.pharma-person {
   padding-left: 10px;
 }
 
+.pharma-person-medicine-edit {
+  float: right;
+  margin-right: 20px;
+}
+
 .pharma-person-control {
   margin: 20px;
   border-radius: 20px;
@@ -147,20 +153,44 @@ div.pharma-person {
 }
 
 .pharma-person-add {
-  background-color: green;
+  background-color: white;
+  border: 3px solid green;
 }
 
 .pharma-person-edit {
-  background-color: blue;
+  background-color: white;
+  border: 3px solid blue;
 }
 
 .pharma-person-delete {
-  background-color: red;
+  background-color: white;
+  border: 3px solid red;
 }
 
 p.pharma-delete-person-para {
   float: right;
   margin-right: 20px;
+}
+
+table.pharma-edit-layout {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.pharma-edit-layout-label {
+  text-align: right;
+  font-weight: bold;
+}
+
+td.pharma-edit-layout-control {
+  text-align: left;
+}
+
+td.pharma-edit-layout-error {
+  text-align: left;
+  font-weight: bold;
+  color: red;
 }
 
 .App-footer {

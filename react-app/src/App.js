@@ -10,8 +10,6 @@ class App extends Component {
     super(props);
     this.state = {
         units: ["tablets(s)","ml"],
-        colors: ["Pink","Orchid","Salmon","Orange","Khaki","Gainsboro"],
-        icons: ["۝","۞","⊜","⊞","⊙","⊗"],
         // mode: 'list','edit','delete'
         mode: 'list',
         // control: 'undefined', 'person', 'medicine'
@@ -20,10 +18,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        newUserName: '',
-        newUserColor: "Pink",
-        newUserIcon: "۝",
-        version: "0.3.0.0",
+        version: "0.4.0.0",
         meds: [],
     }
   }
@@ -39,6 +34,18 @@ class App extends Component {
 
   isSomething(str){
     return !(str === null || str.match(/^ *$/) !== null);
+  }
+
+  doEditMedicine = (personId, medicineId) => {
+    console.log("doEditMedicine(" + personId + "," + medicineId + ")");
+    this.setState(
+      {
+        mode: 'edit',
+        personId: personId,
+        medicineId: medicineId,
+        control: 'medicine'
+      }
+    );
   }
 
   doCancelEdit = () => {
@@ -146,10 +153,27 @@ class App extends Component {
   }
 
   callbackPersonDelete = (id) => {
-    alert("TODO::callbackPersonDelete(" + id + ")");
-    // delete the medicines
-    // delete the person
-    // refresh the data
+    // delete the medicines, then the person
+    let that = this;
+    db.table('meds')
+      .where('personId')
+      .equals(id)
+      .delete()
+      .then(function(){
+        db.table('persons').where('id')
+        .equals(id)
+        .delete()
+        .then(function(){
+          that.setState(
+            {
+              mode: 'list',
+              personId: undefined,
+              medicineId: undefined,
+              control: undefined
+            }, 
+            () => { that.fetchAllData(); });
+        })
+      })
   }
 
   callbackPersonAdd = (name,icon,color) => {
@@ -272,6 +296,16 @@ class App extends Component {
                 if(m.personId === p.id){
                   return (
                     <div className="pharma-person-medicine" key={m.id}>
+                      <p className="pharma-person-medicine-edit">
+                        <button 
+                          onClick={() => {
+                            this.doEditMedicine(p.id, m.id);
+                          }} 
+                          className="pharma-btn pharma-btn-edit"
+                          >
+                            Edit Medicine
+                        </button>
+                      </p>
                       <p><strong>{m.name}</strong> <em>({m.strength})</em></p>
                       <p>days left: <strong>{m.daysLeft}</strong> <em>({m.until})</em></p>
                     </div>
