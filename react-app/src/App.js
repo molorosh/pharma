@@ -176,6 +176,21 @@ class App extends Component {
     }
   }
 
+  callbackMedicineDelete = () => {
+    this.fetchAllData();
+    /*
+    this.setState(
+      {
+        mode: 'list',
+        personId: undefined,
+        medicineId: undefined,
+        control: undefined
+      }
+      , () => { this.fetchAllData(); }
+    );
+    */
+  }
+
   callbackPersonDelete = (id) => {
     // delete the medicines, then the person
     let that = this;
@@ -260,7 +275,7 @@ class App extends Component {
       if(this.state.control === "person"){
         editControl = (
           <EditPerson
-            onCancel={this.doCancelEdit} 
+           onCancel={this.doCancelEdit} 
             mode={this.state.mode} 
             personId={this.state.personId}
             callbackPersonAdd={this.callbackPersonAdd}
@@ -272,6 +287,7 @@ class App extends Component {
         editControl = (
           <EditMedicine
             onCancel={this.doCancelEdit} 
+            onDelete={this.callbackMedicineDelete}
             mode={this.state.mode} 
             personId={this.state.personId}
             medicineId={this.state.medicineId}
@@ -325,15 +341,19 @@ class App extends Component {
                   return (
                     <div className="pharma-person-medicine" key={m.id}>
                       <p className="pharma-person-medicine-edit">
-                        <button 
+                        {
+                          /*
+                          <button 
                           onClick={() => {
                             this.doEditMedicine(p.id, m.id);
                           }} 
                           className="pharma-btn pharma-btn-edit"
                           >
                             Edit Medicine
-                        </button>
-                        <br/>
+                          </button>
+                          <br/>
+                          */
+                        }
                         <button 
                           onClick={() => {
                             this.doRestockMedicine(p.id, m.id);

@@ -160,6 +160,12 @@ div.pharma-person {
   padding: 10px;
 }
 
+.pharma-medicine-control {
+  margin: 20px;
+  border-radius: 20px;
+  padding: 10px;
+}
+
 .pharma-person-add {
   background-color: white;
   border: 3px solid green;
@@ -171,6 +177,26 @@ div.pharma-person {
 }
 
 .pharma-person-delete {
+  background-color: white;
+  border: 3px solid red;
+}
+
+.pharma-medicine-add {
+  background-color: white;
+  border: 3px solid green;
+}
+
+.pharma-medicine-edit {
+  background-color: white;
+  border: 3px solid blue;
+}
+
+.pharma-medicine-restock {
+  background-color: white;
+  border: 3px solid yellow;
+}
+
+.pharma-medicine-delete {
   background-color: white;
   border: 3px solid red;
 }
