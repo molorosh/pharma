@@ -61,6 +61,21 @@ class AppDal {
         return errors;
     }
 
+    mustBeSomething = (strText, name) => {
+        let ret = { 
+            isValid: false,
+            value: undefined,
+            msg: undefined
+        }
+        if(this.isSomething(strText)){
+            ret.msg = "You must supply a " + name;
+        }else{
+            ret.isValid = true;
+            ret.value = strText;
+        }
+        return ret;
+    }
+
     mustBePositiveInteger = (intText, name) => {
         let ret = { 
             isValid: false,
@@ -87,11 +102,19 @@ class AppDal {
         return ret;
     }
 
-    addMedication = (medicineId, txtRestock) => {
+    addMedication = (
+        medicineId, 
+        name,
+        stockAmount
+        ) => {
         let errors = [];
-        let restockValidation = this.mustBePositiveInteger(txtRestock, "Restock Level");
+        let restockValidation = this.mustBePositiveInteger(stockAmount, "Restock Level");
         if(!restockValidation.isValid){
             errors.push({name: "err_Restock", msg: restockValidation.msg });
+        }
+        let nameValidation = this.mustBeSomething(name, "Medicine Name");
+        if(!nameValidation.isValid){
+            errors.push({name: "err_Name", msg: nameValidation.msg });
         }
         if(errors.length === 0){
             // do the update
