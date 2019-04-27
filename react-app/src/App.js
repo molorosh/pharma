@@ -29,11 +29,11 @@ class App extends Component {
   }
 
   isEmptyOrSpaces(str){
-    return str === null || str.match(/^ *$/) !== null;
+    return str === null || str === undefined || str.match(/^ *$/) !== null;
   }
 
   isSomething(str){
-    return !(str === null || str.match(/^ *$/) !== null);
+      return !this.isEmptyOrSpaces(str);
   }
 
   doEditMedicine = (personId, medicineId) => {
@@ -178,17 +178,14 @@ class App extends Component {
 
   callbackMedicineDelete = () => {
     this.fetchAllData();
-    /*
-    this.setState(
-      {
-        mode: 'list',
-        personId: undefined,
-        medicineId: undefined,
-        control: undefined
-      }
-      , () => { this.fetchAllData(); }
-    );
-    */
+  }
+
+  callbackMedicineRestock = () => {
+    this.fetchAllData();
+  }
+
+  callbackMedicineAdd = () => {
+    this.fetchAllData();
   }
 
   callbackPersonDelete = (id) => {
@@ -288,6 +285,8 @@ class App extends Component {
           <EditMedicine
             onCancel={this.doCancelEdit} 
             onDelete={this.callbackMedicineDelete}
+            onRestock={this.callbackMedicineDelete}
+            onAdd={this.callbackMedicineAdd}
             mode={this.state.mode} 
             personId={this.state.personId}
             medicineId={this.state.medicineId}
@@ -390,7 +389,7 @@ class App extends Component {
                         this.doDeleteUser(p.id);
                       }
                     } 
-                    className="pharma-btn pharma-btn-delete" >delete person</button>
+                    className="pharma-btn pharma-btn-delete" >Delete Person</button>
                 </p>
                 <h1>{p.icon} {p.name}</h1>
                 <h4><span role="img" aria-label="Medicine">💊</span> Medicines</h4>
