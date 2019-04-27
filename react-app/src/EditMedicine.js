@@ -7,16 +7,18 @@ class EditMedecine extends Component {
     constructor(props){
         super(props);
         this.state = {
+            unitList: ["tablets(s)","ml"],
+            dayList: ["1","2","3","4","5","6","7"],
             personId: props.personId,
             medicineId: props.medicineId,
-            med_name: undefined,
-            med_strength: undefined,
-            med_units: undefined,
-            med_stockDate: undefined,
-            med_stockAmount: undefined,
-            med_scheduleAmount: undefined,
-            med_everyNdays: undefined,
-            restockLevel: '',
+            name: '',
+            strength: '',
+            stockDate: '',
+            units: '',
+            stockAmount: '',
+            scheduleAmount: '',
+            everyNdays: '',
+            err_stockAmount: '',
         };
     }
 
@@ -34,38 +36,79 @@ class EditMedecine extends Component {
             db.table("meds").get(this.state.medicineId)
             .then(function(med){
                 that.setState({
-                    med_name: med.name,
-                    med_strength: med.strength,
-                    med_units: med.units,
-                    med_stockDate: med.stockDate,
-                    med_stockAmount: med.stockAmount,
-                    med_scheduleAmount: med.scheduleAmount,
-                    med_everyNdays: med.everyNdays
+                    name: med.name,
+                    strength: med.strength,
+                    units: med.units,
+                    stockDate: med.stockDate,
+                    stockAmount: (that.props.mode === "restock") ? '' : med.stockAmount,
+                    scheduleAmount: med.scheduleAmount,
+                    everyNdays: med.everyNdays
                 });
             });
         }
     }
 
-    doChangeRestockLevel = (event) => {
+    doChange_stockAmount = (event) => {
         this.setState(
-            {restockLevel: event.target.value}
+            {stockAmount: event.target.value}
+        );
+    }
+
+    doChange_name = (event) => {
+        this.setState(
+            {name: event.target.value}
+        );
+    }
+    
+    doChange_units = (event) => {
+        this.setState(
+            {units: event.target.value}
+        );
+    }
+    
+    doChange_strength = (event) => {
+        this.setState(
+            {strength: event.target.value}
+        );
+    }
+
+    doChange_stockDate = (event) => {
+        this.setState(
+            {stockDate: event.target.value}
+        );
+    }
+
+    doChange_scheduleAmount = (event) => {
+        this.setState(
+            {scheduleAmount: event.target.value}
+        );
+    }
+
+    doChange_everyNdays = (event) => {
+        this.setState(
+            {everyNdays: event.target.value}
         );
     }
 
     clearErrors = () => {
         this.setState({
-            errRestock: undefined
+            err_stockAmount: undefined
         });
     }
 
     showErrors = (errors) => {
-        console.log("errors");
-        console.log(errors);
+        if(errors && errors.length){
+            let changes = {};
+            for(let x = 0, xMax = errors.length; x < xMax; x++){
+                changes[errors[x].name] = errors[x].msg;
+            }
+            this.setState(changes);
+        }
     }
 
     processRestock = () => {
         this.clearErrors();
-        let errors = dal.restockMedication(this.state.medicineId, this.state.restockLevel);
+        let errors = dal.restockMedication(this.state.medicineId, this.state.stockAmount);
         if(errors.length === 0){
             this.props.onRestock();
         }else{
@@ -78,6 +121,18 @@ class EditMedecine extends Component {
         let errors = dal.deleteMedication(this.state.medicineId);
         if(errors.length === 0){
             this.props.onDelete();
+        }else{
+            this.showErrors(errors);
+        }
+    }
+
+    processAdd = () => {
+        this.clearErrors();
+        let errors = dal.addMedication(
+            this.state.medicineId
+            );
+        if(errors.length === 0){
+            this.props.onAdd();
         }else{
             this.showErrors(errors);
         }
@@ -96,13 +151,110 @@ class EditMedecine extends Component {
         if(this.props.medicineId === undefined){
             classFullname += " pharma-medicine-add"
             title = "Add New Medicine";
+            actionButtons = (<>
+                <button 
+                    onClick={this.processAdd} 
+                    className="pharma-btn pharma-btn-add"
+                >
+                    Add
+                </button>
+            </>);
+            const units = this.state.unitList.slice();
+            const unitOptions = units.map(
+            (a) => {
+                return (<option key={a} value={a}>{a}</option>)
+            }
+            );
+            const days = this.state.dayList.slice();
+            const daysOptions = days.map(
+                (a) => {
+                    return (<option key={a} value={a}>{a}</option>)
+                }
+            );
+            mainContent = (<>
+                <table className="pharma-edit-layout">
+                    <tbody>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                name:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <input type="text" value={this.state.name} onChange={this.doChange_name} />
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                units:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <select onChange={this.doChange_units} value={this.state.units}>
+                                    {unitOptions}
+                                </select>
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_units}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                strength:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <input type="text" value={this.state.strength} onChange={this.doChange_strength} />
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_strength}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                dose:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <input type="text" value={this.state.scheduleAmount} onChange={this.doChange_scheduleAmount} />
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_scheduleAmount}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                every
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <select onChange={this.doChange_everyNdays} value={this.state.everyNdays} >
+                                    {daysOptions}
+                                </select>
+                                &nbsp; days
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_everyNdays}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="pharma-edit-layout-label">
+                                stock level:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <input type="text" size="5" maxLength="5" value={this.state.stockAmount} onChange={this.doChange_stockAmount} />
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_stockAmount}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>          
+            </>);
         }else if(this.props.mode === "delete"){
             classFullname += " pharma-medicine-delete";
             title = "Delete Medicine";
             mainContent = (<>
                 <p>You have chosen to delete the following medication:</p>
                 {medDescription}
-                <p>{this.state.med_scheduleAmount} {this.state.med_units} every {this.state.med_scheduleAmount} days</p>
+                <p>{this.state.scheduleAmount} {this.state.units} every {this.state.scheduleAmount} days</p>
             </>);
             actionButtons = (<>
                 <button 
@@ -118,7 +270,7 @@ class EditMedecine extends Component {
             mainContent = (<>
                 <p>You have chosen to restock the following medication:</p>
                 {medDescription}
-                <p>{this.state.med_scheduleAmount} {this.state.med_units} every {this.state.med_scheduleAmount} days</p>
+                <p>{this.state.scheduleAmount} {this.state.units} every {this.state.scheduleAmount} days</p>
                 <p>Please enter the stock level at the <u>start</u> of <u>today</u></p>
                 <table className="pharma-edit-layout">
                     <tbody>
@@ -127,10 +279,10 @@ class EditMedecine extends Component {
                                 Stock amount:
                             </td>
                             <td className="pharma-edit-layout-control">
-                                <input type="text" size="5" maxLength="5" value={this.state.restockLevel} onChange={this.doChangeRestockLevel} />
+                                <input type="text" size="5" maxLength="5" value={this.state.stockAmount} onChange={this.doChange_stockAmount} />
                             </td>
                             <td className="pharma-edit-layout-error">
-                                {this.state.errRestock}
+                                {this.state.err_stockAmount}
                             </td>
                         </tr>
                     </tbody>
