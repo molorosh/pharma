@@ -27,11 +27,11 @@ class EditPerson extends Component {
     }
 
     isEmptyOrSpaces(str){
-        return str === null || str.match(/^ *$/) !== null;
+        return str === null || str === undefined || str.match(/^ *$/) !== null;
     }
-
+    
     isSomething(str){
-        return !(str === null || str.match(/^ *$/) !== null);
+        return !this.isEmptyOrSpaces(str);
     }
 
     handleChangeName = (event) => {
