@@ -271,6 +271,7 @@ class EditMedecine extends Component {
                         </tr>
                     </tbody>
                 </table>  
+                {/*
                 <p>
                     {this.state.name}
                     |{this.state.strength}
@@ -280,7 +281,8 @@ class EditMedecine extends Component {
                     |{this.state.scheduleAmount}
                     |{this.state.scheduleAmount}
                     |{this.state.everyNdays}
-                </p>        
+                </p>
+                 */}        
             </>);
         }else if(this.props.mode === "delete"){
             classFullname += " pharma-medicine-delete";
