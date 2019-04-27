@@ -67,7 +67,7 @@ class AppDal {
             value: undefined,
             msg: undefined
         }
-        if(this.isSomething(strText)){
+        if(!this.isSomething(strText)){
             ret.msg = "You must supply a " + name;
         }else{
             ret.isValid = true;
@@ -103,33 +103,46 @@ class AppDal {
     }
 
     addMedication = (
-        medicineId, 
+        personId, 
         name,
-        stockAmount
+        stockAmount,
+        dose,
+        strength,
+        everyNdays,
+        units
         ) => {
         let errors = [];
-        let restockValidation = this.mustBePositiveInteger(stockAmount, "Restock Level");
+        let restockValidation = this.mustBePositiveInteger(stockAmount, "Stock Amount");
         if(!restockValidation.isValid){
-            errors.push({name: "err_Restock", msg: restockValidation.msg });
+            errors.push({name: "err_stockAmount", msg: restockValidation.msg });
         }
         let nameValidation = this.mustBeSomething(name, "Medicine Name");
         if(!nameValidation.isValid){
-            errors.push({name: "err_Name", msg: nameValidation.msg });
+            errors.push({name: "err_name", msg: nameValidation.msg});
+        }
+        let doseValidation = this.mustBePositiveInteger(dose, "Dose");
+        if(!doseValidation.isValid){
+            errors.push({name: "err_scheduleAmount", msg: doseValidation.msg });
+        }
+        let strengthValidation = this.mustBeSomething(strength, "Strength");
+        if(!strengthValidation.isValid){
+            errors.push({name: "err_strength", msg: strengthValidation.msg});
         }
         if(errors.length === 0){
-            // do the update
-            /*
-            let changes = {
+            const med = {
+                personId: personId,
+                name: nameValidation.value,
+                strength: strengthValidation.value,
+                units: units,
                 stockDate: this.today(),
-                stockAmount: lvl
-            };
-            (async () => {
-                await db.table("meds")
-                    .where(":id")
-                    .equals(medicineId)
-                    .modify(changes);
-            })();
-            */
+                stockAmount: restockValidation.value,
+                scheduleAmount: doseValidation.value,
+                everyNdays: everyNdays
+              };
+              (async () => {
+                db.table('meds')
+                    .add(med);
+              })();
         }
         return errors;
     }

@@ -18,7 +18,13 @@ class EditMedecine extends Component {
             stockAmount: '',
             scheduleAmount: '',
             everyNdays: '',
+            err_name: '',
+            err_strength: '',
+            err_stockDate: '',
+            err_units: '',
             err_stockAmount: '',
+            err_scheduleAmount: '',
+            err_everyNdays: '',
         };
     }
 
@@ -44,6 +50,11 @@ class EditMedecine extends Component {
                     scheduleAmount: med.scheduleAmount,
                     everyNdays: med.everyNdays
                 });
+            });
+        }else{
+            this.setState({
+                units: this.state.unitList[0],
+                everyNdays: this.state.dayList[0]
             });
         }
     }
@@ -92,7 +103,13 @@ class EditMedecine extends Component {
 
     clearErrors = () => {
         this.setState({
-            err_stockAmount: undefined
+            err_stockAmount: '',
+            err_everyNdays: '',
+            err_name: '',
+            err_scheduleAmount: '',
+            err_stockDate: '',
+            err_strength: '',
+            err_units: ''
         });
     }
 
@@ -129,8 +146,15 @@ class EditMedecine extends Component {
     processAdd = () => {
         this.clearErrors();
         let errors = dal.addMedication(
-            this.state.medicineId
+                this.state.personId,
+                this.state.name,
+                this.state.stockAmount,
+                this.state.scheduleAmount,
+                this.state.strength,
+                this.state.everyNdays,
+                this.state.units
             );
+        console.log(errors);
         if(errors.length === 0){
             this.props.onAdd();
         }else{
@@ -246,7 +270,17 @@ class EditMedecine extends Component {
                             </td>
                         </tr>
                     </tbody>
-                </table>          
+                </table>  
+                <p>
+                    {this.state.name}
+                    |{this.state.strength}
+                    |{this.state.stockDate}
+                    |{this.state.units}
+                    |{this.state.stockAmount}
+                    |{this.state.scheduleAmount}
+                    |{this.state.scheduleAmount}
+                    |{this.state.everyNdays}
+                </p>        
             </>);
         }else if(this.props.mode === "delete"){
             classFullname += " pharma-medicine-delete";

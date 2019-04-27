@@ -18,7 +18,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "0.5.0.0",
+        version: "0.6.0.0",
         meds: [],
     }
   }
@@ -37,7 +37,6 @@ class App extends Component {
   }
 
   doEditMedicine = (personId, medicineId) => {
-    console.log("doEditMedicine(" + personId + "," + medicineId + ")");
     this.setState(
       {
         mode: 'edit',
@@ -149,31 +148,6 @@ class App extends Component {
     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
     med.daysLeft = dayDiff;
     med.until = this.fromDateToDateString(until);
-  }
-
-  doAddNewMed = (personId) => {
-    let medName = document.getElementById('newMedName_' + personId).value;
-    let medDose = document.getElementById('newMedDose_' + personId).value;
-    let medStrength = document.getElementById('newMedStrength_' + personId).value;
-    let medStock = document.getElementById('newMedStock_' + personId).value;
-    let medEveryNDays = document.getElementById('newMedEveryNDays_' + personId).value;
-    let newMedUnits = document.getElementById('newMedUnits_' + personId).value;
-
-    if(this.isSomething(medName)){
-      const med = {
-        personId: personId,
-        name: medName,
-        strength: medStrength,
-        units: newMedUnits,
-        stockDate: this.today(),
-        stockAmount: medStock,
-        scheduleAmount: medDose,
-        everyNdays: medEveryNDays
-      };
-      db.table('meds')
-      .add(med)
-      .then(this.fetchAllData());
-    }
   }
 
   callbackMedicineDelete = () => {
@@ -315,12 +289,6 @@ class App extends Component {
       );
     }
 
-    const units = this.state.units.slice();
-    const unitOptions = units.map(
-      (a) => {
-        return (<option key={a} value={a}>{a}</option>)
-      }
-    );
       // persons
       let personsHtml = null;
       let medsHtml = null;
@@ -400,45 +368,6 @@ class App extends Component {
                       Add Medicine
                     </button>
                   </p>
-                <div className="pharma-add-new-medecine">
-                <p>
-                  name: <input id={'newMedName_' + p.id} type="text"></input>
-                </p>
-                <p>units: <select defaultValue={"tablet(s)"} id={'newMedUnits_' + p.id}>
-                     {unitOptions}
-                    </select> 
-                    </p>
-                <p>strength: <input size="7" maxLength="7" id={'newMedStrength_' + p.id} type="text"></input>
-                </p>
-                <p>dose: <input size="7" maxLength="7" id={'newMedDose_' + p.id} type="text"></input>
-                </p>
-                <p>every 
-                    <select defaultValue={"1"} id={'newMedEveryNDays_' + p.id}>
-                      <option value="1">1</option>
-                      <option value="1">2</option>
-                      <option value="1">3</option>
-                      <option value="1">4</option>
-                      <option value="1">5</option>
-                      <option value="1">6</option>
-                      <option value="1">7</option>
-                    </select> days 
-                    </p>
-                <p>stock level: <input size="7" maxLength="7" id={'newMedStock_' + p.id} type="text"></input>
-                </p>
-                <p><button className="pharma-btn pharma-btn-add" 
-                    onClick={
-                      () => {
-                        let newDrugName = '??';
-                        let elem = document.getElementById('newMedName_' + p.id);
-                        if(elem){
-                          newDrugName = elem.value;
-                          this.doAddNewMed(p.id, newDrugName);
-                        }
-                      }
-                    }
-                      >Add</button>
-                </p>
-                </div>
                 {medsHtml}
               </div>
             );
