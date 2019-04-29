@@ -21,7 +21,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "0.7.0.0",
+        version: "0.9.0.0",
         meds: [],
     }
   }
