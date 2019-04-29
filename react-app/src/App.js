@@ -4,11 +4,15 @@ import db from './db';
 import './App.css';
 import EditPerson from './EditPerson';
 import EditMedicine from './EditMedicine';
+import Documentation from './Documentation';
+import About from './About';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+        // docsMode: 'people','help','about'
+        docsMode: 'people',
         // mode: 'list','edit','delete','add','restock'
         mode: 'list',
         // control: 'undefined', 'person', 'medicine'
@@ -33,6 +37,33 @@ class App extends Component {
 
   isSomething(str){
       return !this.isEmptyOrSpaces(str);
+  }
+
+  doShowPeople = () => {
+    console.log("doShowPeople()");
+    this.setState(
+      {
+        docsMode: 'people',
+      }
+    );
+  }
+
+  doShowHelp = () => {
+    console.log("doShowHelp()");
+    this.setState(
+      {
+        docsMode: 'help'
+      }
+    );
+  }
+
+  doShowAbout = () => {
+    console.log("doShowAbout()");
+    this.setState(
+      {
+        docsMode: 'about'
+      }
+    );
   }
 
   doEditMedicine = (personId, medicineId) => {
@@ -240,7 +271,11 @@ class App extends Component {
   }
 
   render() {
-    if(this.state.mode !== "list" && this.state.control){
+    if(
+        (this.state.mode !== "list" && this.state.control) 
+        || this.state.docsMode === "help"
+        || this.state.docsMode === "about" 
+      ){
       let editControl = undefined;
       if(this.state.control === "person"){
         editControl = (
@@ -266,6 +301,20 @@ class App extends Component {
             >
           </EditMedicine>
         );
+      }else if(this.state.docsMode === "help"){
+        editControl = (
+          <Documentation
+            doClose={this.doShowPeople}
+          >
+          </Documentation>
+        );
+      }else if(this.state.docsMode === "about"){
+        editControl = (
+          <About
+            doClose={this.doShowPeople}
+            >
+          </About>
+        );
       }
       return (
         <div className="App">
@@ -287,7 +336,6 @@ class App extends Component {
       </div>    
       );
     }
-
       // persons
       let personsHtml = null;
       let medsHtml = null;
@@ -383,6 +431,8 @@ class App extends Component {
         </header>
         <section className="AppSection">
             <h3><span role="img" aria-label="People">👥</span> People</h3>
+            <div><button className="pharma-btn pharma-btn-add" onClick={this.doShowHelp}>Help</button></div>
+            <div><button className="pharma-btn pharma-btn-add" onClick={this.doShowAbout}>About</button></div>
             <p>
               <button className="pharma-btn pharma-btn-add" onClick={() => { this.doEditUser(undefined) }}>New Person</button>
             </p>
