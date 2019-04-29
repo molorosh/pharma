@@ -65,7 +65,7 @@ class EditPerson extends Component {
         let errUserName = undefined;
         let errorTally = 0;
         if(this.isEmptyOrSpaces(n)){
-            errUserName = "Please enter a username";
+            errUserName = "Please enter intitials (or nickname)";
             errorTally++;
         }
         this.setState(
@@ -110,14 +110,21 @@ class EditPerson extends Component {
                     <table className="pharma-edit-layout">
                         <tbody>
                             <tr>
+                                <td colSpan="2" className="pharma-edit-layout-error">
+                                    {this.state.errUserName}
+                                </td>
+                            </tr>
+                            <tr>
                                 <td className="pharma-edit-layout-label">
                                     initials:
                                 </td>
                                 <td className="pharma-edit-layout-control">
                                     <input type="text" size="5" maxLength="5" value={this.state.newUserName} onChange={this.doChangeNewUserName} />
                                 </td>
-                                <td className="pharma-edit-layout-error">
-                                    {this.state.errUserName}
+                            </tr>
+                            <tr>
+                                <td colSpan="2" className="pharma-edit-layout-error">
+
                                 </td>
                             </tr>
                             <tr>
@@ -127,8 +134,10 @@ class EditPerson extends Component {
                                 <td className="pharma-edit-layout-control">
                                     {selectColors}
                                 </td>
-                                <td className="pharma-edit-layout-error">
-
+                            </tr>
+                            <tr>
+                                <td colSpan="2" className="pharma-edit-layout-error">
+                                    
                                 </td>
                             </tr>
                             <tr>
@@ -137,9 +146,6 @@ class EditPerson extends Component {
                                 </td>
                                 <td className="pharma-edit-layout-control">
                                     {selectIcons}
-                                </td>
-                                <td className="pharma-edit-layout-error">
-                                    
                                 </td>
                             </tr>
                         </tbody>

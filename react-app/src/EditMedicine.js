@@ -198,6 +198,11 @@ class EditMedecine extends Component {
             mainContent = (<>
                 <table className="pharma-edit-layout">
                     <tbody>
+                        <tr>                        
+                            <td colSpan="2" className="pharma-edit-layout-error">
+                                {this.state.err_name}
+                            </td>
+                        </tr>
                         <tr>
                             <td className="pharma-edit-layout-label">
                                 name:
@@ -205,8 +210,10 @@ class EditMedecine extends Component {
                             <td className="pharma-edit-layout-control">
                                 <input type="text" value={this.state.name} onChange={this.doChange_name} />
                             </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_name}
+                        </tr> 
+                        <tr>                   
+                            <td colSpan="2" className="pharma-edit-layout-error">
+                                {this.state.err_units}
                             </td>
                         </tr>
                         <tr>
@@ -218,8 +225,10 @@ class EditMedecine extends Component {
                                     {unitOptions}
                                 </select>
                             </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_units}
+                        </tr>
+                        <tr>                        
+                           <td colSpan="2" className="pharma-edit-layout-error">
+                                {this.state.err_strength}
                             </td>
                         </tr>
                         <tr>
@@ -229,8 +238,10 @@ class EditMedecine extends Component {
                             <td className="pharma-edit-layout-control">
                                 <input type="text" value={this.state.strength} onChange={this.doChange_strength} />
                             </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_strength}
+                        </tr>
+                        <tr>
+                            <td colSpan="2" className="pharma-edit-layout-error">
+                                {this.state.err_scheduleAmount}
                             </td>
                         </tr>
                         <tr>
@@ -239,9 +250,6 @@ class EditMedecine extends Component {
                             </td>
                             <td className="pharma-edit-layout-control">
                                 <input type="text" value={this.state.scheduleAmount} onChange={this.doChange_scheduleAmount} />
-                            </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_scheduleAmount}
                             </td>
                         </tr>
                         <tr>
@@ -259,30 +267,20 @@ class EditMedecine extends Component {
                             </td>
                         </tr>
                         <tr>
+                            <td colSpan="2" className="pharma-edit-layout-error">
+                                {this.state.err_stockAmount}
+                            </td>
+                        </tr>
+                        <tr>
                             <td className="pharma-edit-layout-label">
                                 stock level:
                             </td>
                             <td className="pharma-edit-layout-control">
                                 <input type="text" size="5" maxLength="5" value={this.state.stockAmount} onChange={this.doChange_stockAmount} />
                             </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_stockAmount}
-                            </td>
                         </tr>
                     </tbody>
                 </table>  
-                {/*
-                <p>
-                    {this.state.name}
-                    |{this.state.strength}
-                    |{this.state.stockDate}
-                    |{this.state.units}
-                    |{this.state.stockAmount}
-                    |{this.state.scheduleAmount}
-                    |{this.state.scheduleAmount}
-                    |{this.state.everyNdays}
-                </p>
-                 */}        
             </>);
         }else if(this.props.mode === "delete"){
             classFullname += " pharma-medicine-delete";

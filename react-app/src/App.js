@@ -9,7 +9,6 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-        units: ["tablets(s)","ml"],
         // mode: 'list','edit','delete','add','restock'
         mode: 'list',
         // control: 'undefined', 'person', 'medicine'
@@ -18,7 +17,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "0.6.1.0",
+        version: "0.7.0.0",
         meds: [],
     }
   }
