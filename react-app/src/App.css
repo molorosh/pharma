@@ -53,6 +53,14 @@ section.AppSection {
   }
 }
 
+div.theHelp {
+  float: left;
+}
+
+div.theAbout {
+  float: right;
+}
+
 div.pharma-person {
   text-align: justify;
   padding-left: 1em;
@@ -108,6 +116,16 @@ div.pharma-person {
 
 .pharma-btn-edit {
   background-color: aqua;
+  color: black;
+}
+
+.pharma-btn-help {
+  background-color: magenta;
+  color: black;
+}
+
+.pharma-btn-about {
+  background-color: cyan;
   color: black;
 }
 

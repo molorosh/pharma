@@ -40,7 +40,6 @@ class App extends Component {
   }
 
   doShowPeople = () => {
-    console.log("doShowPeople()");
     this.setState(
       {
         docsMode: 'people',
@@ -49,7 +48,6 @@ class App extends Component {
   }
 
   doShowHelp = () => {
-    console.log("doShowHelp()");
     this.setState(
       {
         docsMode: 'help'
@@ -58,7 +56,6 @@ class App extends Component {
   }
 
   doShowAbout = () => {
-    console.log("doShowAbout()");
     this.setState(
       {
         docsMode: 'about'
@@ -431,8 +428,8 @@ class App extends Component {
         </header>
         <section className="AppSection">
             <h3><span role="img" aria-label="People">👥</span> People</h3>
-            <div><button className="pharma-btn pharma-btn-add" onClick={this.doShowHelp}>Help</button></div>
-            <div><button className="pharma-btn pharma-btn-add" onClick={this.doShowAbout}>About</button></div>
+            <div className="theHelp"><button className="pharma-btn pharma-btn-help" onClick={this.doShowHelp}>Help</button></div>
+            <div className="theAbout"><button className="pharma-btn pharma-btn-about" onClick={this.doShowAbout}>About</button></div>
             <p>
               <button className="pharma-btn pharma-btn-add" onClick={() => { this.doEditUser(undefined) }}>New Person</button>
             </p>

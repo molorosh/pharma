@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import './App.css';
 
 class Documentation extends Component {
 
     render(){
         return (
             <>
-                <p>Documentation</p>
+                <h3><span role="img" aria-label="Help">📖</span> Help</h3>
+                <p></p>
+
                 <p>
                     <button 
                         onClick={this.props.doClose} 
