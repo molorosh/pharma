@@ -1,14 +1,14 @@
 {
-  "main.css": "/pharma/static/css/main.b8b299e4.chunk.css",
-  "main.js": "/pharma/static/js/main.943dd5aa.chunk.js",
-  "main.js.map": "/pharma/static/js/main.943dd5aa.chunk.js.map",
+  "main.css": "/pharma/static/css/main.edfc9899.chunk.css",
+  "main.js": "/pharma/static/js/main.64ee7b35.chunk.js",
+  "main.js.map": "/pharma/static/js/main.64ee7b35.chunk.js.map",
   "runtime~main.js": "/pharma/static/js/runtime~main.ace989df.js",
   "runtime~main.js.map": "/pharma/static/js/runtime~main.ace989df.js.map",
-  "static/js/2.e347a358.chunk.js": "/pharma/static/js/2.e347a358.chunk.js",
-  "static/js/2.e347a358.chunk.js.map": "/pharma/static/js/2.e347a358.chunk.js.map",
+  "static/js/2.49c58183.chunk.js": "/pharma/static/js/2.49c58183.chunk.js",
+  "static/js/2.49c58183.chunk.js.map": "/pharma/static/js/2.49c58183.chunk.js.map",
   "index.html": "/pharma/index.html",
-  "precache-manifest.0af2763d41c7f427c420897363e3c1ac.js": "/pharma/precache-manifest.0af2763d41c7f427c420897363e3c1ac.js",
+  "precache-manifest.cbdd813a33c2b265355d403607115a82.js": "/pharma/precache-manifest.cbdd813a33c2b265355d403607115a82.js",
   "service-worker.js": "/pharma/service-worker.js",
-  "static/css/main.b8b299e4.chunk.css.map": "/pharma/static/css/main.b8b299e4.chunk.css.map",
+  "static/css/main.edfc9899.chunk.css.map": "/pharma/static/css/main.edfc9899.chunk.css.map",
   "static/media/logo.svg": "/pharma/static/media/logo.c695c8b2.svg"
 }
