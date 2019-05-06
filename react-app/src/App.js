@@ -26,8 +26,22 @@ class App extends Component {
     }
   }
 
+  stripQueryString = () => {
+    if(document.location && document.location.href){
+      let url = document.location.href;
+      if(this.isSomething(url)){
+        let questionMark = url.indexOf('?');
+        if(questionMark > 0){
+          let newUrl = url.slice(0, questionMark);
+          document.location = newUrl;
+        }
+      }
+    }
+  };
+
   // this is called before the "render() method
   componentDidMount() {
+    this.stripQueryString();
     this.fetchAllData();
   }
 
