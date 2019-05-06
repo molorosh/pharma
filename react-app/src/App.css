@@ -109,9 +109,18 @@ div.pharma-person {
   filter: saturate(0.99);
 }
 
+.pharma-btn-prn {
+  background-color: seagreen;
+  color: white;
+}
+
 .pharma-btn-add {
   background-color: violet;
   color: black;
+}
+
+.plain-list {
+  list-style: none;
 }
 
 .pharma-btn-edit {
@@ -218,6 +227,11 @@ div.pharma-person {
 .pharma-medicine-add {
   background-color: white;
   border: 3px solid green;
+}
+
+.pharma-medicine-prn {
+  background-color: white;
+  border: 3px solid seagreen;
 }
 
 .pharma-medicine-edit {

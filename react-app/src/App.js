@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
         // docsMode: 'people','help','about'
         docsMode: 'people',
-        // mode: 'list','edit','delete','add','restock'
+        // mode: 'list','edit','delete','add','restock','prn'
         mode: 'list',
         // control: 'undefined', 'person', 'medicine'
         control: undefined,
@@ -21,7 +21,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "0.9.0.0",
+        version: "1.0.0.0",
         meds: [],
     }
   }
@@ -112,6 +112,18 @@ class App extends Component {
     );
   }
 
+  doPrnMedicine = (personId, medicineId) => {
+    console.log("doPrn(" + personId + "," + medicineId + ")");
+    this.setState(
+      {
+        mode: 'prn',
+        personId: personId,
+        medicineId: medicineId,
+        control: 'medicine'
+      }
+    );
+  }
+
   doCancelEdit = () => {
     this.setState(
       {
@@ -178,17 +190,23 @@ class App extends Component {
   }
 
   doMedsCalculations = (med) => {
-    let doses = med.stockAmount / med.scheduleAmount; 
-    let days = doses * med.everyNdays;
-    let dayFrom = new Date(Date.parse(med.stockDate + "T00:00:00Z"));
-    let now = new Date();
-    let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
-    let until = new Date(dayFrom.valueOf());
-    until.setDate(until.getDate() + days);
-    let timeDiff = (until.getTime() - today.getTime());
-    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    med.daysLeft = dayDiff;
-    med.until = this.fromDateToDateString(until);
+    if(med.everyNdays === "0"){
+      // PRN (take as required)
+      let prn_doses = med.stockAmount / med.scheduleAmount;
+      med.daysLeft = parseInt(prn_doses);
+    }else {
+      let doses = med.stockAmount / med.scheduleAmount; 
+      let days = doses * med.everyNdays;
+      let dayFrom = new Date(Date.parse(med.stockDate + "T00:00:00Z"));
+      let now = new Date();
+      let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+      let until = new Date(dayFrom.valueOf());
+      until.setDate(until.getDate() + days);
+      let timeDiff = (until.getTime() - today.getTime());
+      let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      med.daysLeft = dayDiff;
+      med.until = this.fromDateToDateString(until);
+    }
   }
 
   callbackMedicineDelete = () => {
@@ -196,6 +214,10 @@ class App extends Component {
   }
 
   callbackMedicineRestock = () => {
+    this.fetchAllData();
+  }
+
+  callbackMedicinePrn = () => {
     this.fetchAllData();
   }
 
@@ -306,6 +328,7 @@ class App extends Component {
             onDelete={this.callbackMedicineDelete}
             onRestock={this.callbackMedicineDelete}
             onAdd={this.callbackMedicineAdd}
+            onPrn={this.callbackMedicinePrn}
             mode={this.state.mode} 
             personId={this.state.personId}
             medicineId={this.state.medicineId}
@@ -358,27 +381,33 @@ class App extends Component {
             let meds = this.state.meds.slice();
             medsHtml = meds.map(
               (m) => {
+                let prnButton = <></>;
+                let daysLeft = <><p>days left: <strong>{m.daysLeft}</strong> <em>({m.until})</em></p></>;
+                let scheduleTxt = <>every {m.everyNdays} day(s)</>;
+                if(m.everyNdays === "0"){
+                  scheduleTxt = "PRN (take as required)";
+                  daysLeft = <><p>doses left: <strong>{m.daysLeft}</strong></p></>;
+                  prnButton = (<><button 
+                    onClick={() => {
+                      this.doPrnMedicine(p.id, m.id);
+                    }} 
+                    className="pharma-btn pharma-btn-prn"
+                    >
+                      Give PRN
+                  </button>
+                  <br/>
+                  </>);
+                }
                 if(m.personId === p.id){
                   let strengthText = (<></>);
                   if(this.isSomething(m.strength)){
                     strengthText = (<em>({m.strength})</em>);
                   }
+                  
                   return (
                     <div className="pharma-person-medicine" key={m.id}>
                       <p className="pharma-person-medicine-edit">
-                        {
-                          /*
-                          <button 
-                          onClick={() => {
-                            this.doEditMedicine(p.id, m.id);
-                          }} 
-                          className="pharma-btn pharma-btn-edit"
-                          >
-                            Edit Medicine
-                          </button>
-                          <br/>
-                          */
-                        }
+                        {prnButton}
                         <button 
                           onClick={() => {
                             this.doRestockMedicine(p.id, m.id);
@@ -398,8 +427,8 @@ class App extends Component {
                         </button>
                       </p>
                       <p><strong>{m.name}</strong> {strengthText}</p>
-                      <p>{m.scheduleAmount} {m.units} every {m.everyNdays} day(s)</p>
-                      <p>days left: <strong>{m.daysLeft}</strong> <em>({m.until})</em></p>
+                      <p>{m.scheduleAmount} {m.units} {scheduleTxt}</p>
+                      {daysLeft}
                     </div>
                     );
                 }else{

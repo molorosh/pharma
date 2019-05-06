@@ -30,6 +30,26 @@ class AppDal {
         return(this.fromDateToDateString(new Date()));
     }
 
+    givePrn = (medicineId, amount, current) => {
+        console.log("DAL: givePrn(" + medicineId + "," + amount + "," + current + ")");
+        let errors = [];
+        let newStock = current - amount;
+        let newToday = this.today();
+        console.log("DAL: newStock = " + newStock);
+        console.log("DAL: newToday = " + newToday);
+        let changes = {
+            stockDate: newToday,
+            stockAmount: newStock
+        };
+        (async () => {
+            await db.table("meds")
+                .where(":id")
+                .equals(medicineId)
+                .modify(changes);
+        })();
+        return errors;
+    }
+
     restockMedication = (medicineId, txtRestock) => {
         let errors = [];
         let lvl = undefined;

@@ -8,7 +8,7 @@ class EditMedecine extends Component {
         super(props);
         this.state = {
             unitList: ["tablets(s)","ml"],
-            dayList: ["1","2","3","4","5","6","7"],
+            dayList: ["0","1","2","3","4","5","6","7"],
             personId: props.personId,
             medicineId: props.medicineId,
             name: '',
@@ -133,6 +133,17 @@ class EditMedecine extends Component {
         }
     }
 
+    processPrn = (amnt) => {
+        console.log("processPrn(" + amnt + ")");
+        this.clearErrors();
+        let errors = dal.givePrn(this.state.medicineId, amnt, this.state.stockAmount);
+        if(errors.length === 0){
+            this.props.onPrn();
+        }else{
+            this.showErrors(errors);
+        }
+    }
+
     processDelete = () => {
         this.clearErrors();
         let errors = dal.deleteMedication(this.state.medicineId);
@@ -166,12 +177,13 @@ class EditMedecine extends Component {
         let classFullname = "pharma-medicine-control";
         let title = "";
         let actionButtons = <></>;
+        let actionListButtons = <></>;
         let mainContent = <></>;
         let strengthText = (<></>);
         if(this.isSomething(this.state.med_strength)){
           strengthText = (<em>({this.state.med_strength})</em>);
         }
-        let medDescription = <p><strong>{this.state.med_name}</strong> {strengthText}</p>;
+        let medDescription = <p><strong>{this.state.name}</strong> {strengthText}</p>;
         if(this.props.medicineId === undefined){
             classFullname += " pharma-medicine-add"
             title = "Add New Medicine";
@@ -192,9 +204,18 @@ class EditMedecine extends Component {
             const days = this.state.dayList.slice();
             const daysOptions = days.map(
                 (a) => {
-                    return (<option key={a} value={a}>{a}</option>)
+                    let txt = "";
+                    if(a === "0"){
+                        txt = "PRN (take as required)";
+                    }else if(a === "1"){
+                        txt = "Every Day";
+                    }else{
+                        txt = "Every " + a + " Days";
+                    }
+                    return (<option key={a} value={a}>{txt}</option>)
                 }
             );
+            const doseText =  this.state.everyNdays === "0"? "minimum dose" : "dose";
             mainContent = (<>
                 <table className="pharma-edit-layout">
                     <tbody>
@@ -240,30 +261,31 @@ class EditMedecine extends Component {
                             </td>
                         </tr>
                         <tr>
+                            <td className="pharma-edit-layout-label">
+                                schedule:
+                            </td>
+                            <td className="pharma-edit-layout-control">
+                                <select onChange={this.doChange_everyNdays} value={this.state.everyNdays} >
+                                    {daysOptions}
+                                </select>
+                            </td>
+                            <td className="pharma-edit-layout-error">
+                                {this.state.err_everyNdays}
+                            </td>
+                        </tr>
+                        <tr>
                             <td colSpan="2" className="pharma-edit-layout-error">
                                 {this.state.err_scheduleAmount}
                             </td>
                         </tr>
                         <tr>
                             <td className="pharma-edit-layout-label">
-                                dose:
+                                {doseText}:
                             </td>
                             <td className="pharma-edit-layout-control">
                                 <input type="text" value={this.state.scheduleAmount} onChange={this.doChange_scheduleAmount} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="pharma-edit-layout-label">
-                                every
-                            </td>
-                            <td className="pharma-edit-layout-control">
-                                <select onChange={this.doChange_everyNdays} value={this.state.everyNdays} >
-                                    {daysOptions}
-                                </select>
-                                &nbsp; days
-                            </td>
-                            <td className="pharma-edit-layout-error">
-                                {this.state.err_everyNdays}
+                                &nbsp;
+                                {this.state.units}
                             </td>
                         </tr>
                         <tr>
@@ -291,13 +313,50 @@ class EditMedecine extends Component {
                 <p>{this.state.scheduleAmount} {this.state.units} every {this.state.scheduleAmount} days</p>
             </>);
             actionButtons = (<>
-                <button 
+                <button key={"d"}
                     onClick={this.processDelete} 
                     className="pharma-btn pharma-btn-delete"
                 >
                     Delete
                 </button>
             </>);
+        }else if(this.props.mode === "prn"){
+            classFullname += " pharma-medicine-prn"
+            title = "Give PRN";
+            mainContent = (<>
+                <p>You have chosen to give the following medication as PRN:</p>
+                {medDescription}
+                <p className="pharma-edit-layout-error">{this.state.err_prn}</p>
+                </>
+            );
+            let prn_stock = parseFloat(this.state.stockAmount);
+            let prn_dose = parseFloat(this.state.scheduleAmount);
+            let buttons = [];
+            for(let x = 1; x < 5; x++){
+                if(x * prn_dose <= prn_stock){
+                    buttons.push( { id: x, val: x * prn_dose, key: x } );
+                }
+            }
+            let that = this;
+            const buttonObjects = buttons.map(
+                (a) => {
+                    return (
+                        <li key={a.id.toString()}>
+                            <button 
+                                onClick={
+                                    function(){ 
+                                        that.processPrn(a.val); 
+                                    } 
+                                } 
+                                className="pharma-btn pharma-btn-prn"
+                            >
+                                Give {a.val} {this.state.units}
+                            </button>
+                        </li>
+                    )
+                }
+                );
+            actionListButtons = (<ul className="plain-list">{buttonObjects}</ul>);
         }else if(this.props.mode === "restock"){
             classFullname += " pharma-medicine-restock"
             title = "Restock Medicine"
@@ -323,7 +382,7 @@ class EditMedecine extends Component {
                 </table>          
             </>);
             actionButtons = (<>
-                <button 
+                <button key="rstck"
                     onClick={this.processRestock} 
                     className="pharma-btn pharma-btn-restock"
                 >
@@ -347,6 +406,7 @@ class EditMedecine extends Component {
                     </button>
                     {actionButtons}
                 </p>
+                <ul>{actionListButtons}</ul>
             </div>
         );
     }

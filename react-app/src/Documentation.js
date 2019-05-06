@@ -22,6 +22,11 @@ class Documentation extends Component {
                     prescription.  If the person has several pills throughout the day, just give the daily total.
                 </p>
                 <p>
+                    The <b>Give PRN</b> button lets you give multiples of the minimum PRN dose.  As PRN does not
+                    follow a definate schedule, we don't show predictions for the end of PRN stock,  
+                    but do indicate the number of minimum doses available.
+                </p>
+                <p>
                     The <b>Restock Medicine</b> button lets you correct the amount of a medicine.  Please enter the "new" 
                     stock leval at the start of the day (i.e. include, as stock, any meds you have already given <u>today</u>).
                 </p>
@@ -58,8 +63,8 @@ class Documentation extends Component {
                 </p>
                 <h4><span role="img" aria-label="Crystal Ball">🔮</span>Future Features</h4>
                 <p>
-                    The web app does not currently support PRN (<i>Pro Re Nata</i> - Take As Required) medications.
-                    That capability is being worked on at the moment, so it will appear sometime in <b>May 2019</b>.  Promise.
+                    We are looking to introduce an import / export / backup process to allow you 
+                    to transfer per-person medication records from one device to another.
                 </p>
                 <h4><span role="img" aria-label="Free of Charge">🈚</span>Free of Charge</h4>
                 <p>
