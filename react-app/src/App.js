@@ -21,7 +21,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "1.1.0.0",
+        version: "1.1.0.1",
         meds: [],
     }
   }
@@ -64,7 +64,8 @@ class App extends Component {
   doShowHelp = () => {
     this.setState(
       {
-        docsMode: 'help'
+        docsMode: 'help',
+        control: undefined
       }
     );
   }
@@ -72,7 +73,8 @@ class App extends Component {
   doShowAbout = () => {
     this.setState(
       {
-        docsMode: 'about'
+        docsMode: 'about',
+        control: undefined
       }
     );
   }
@@ -490,7 +492,7 @@ class App extends Component {
             <footer className="App-footer">
               <div className="App-footer-div">
                 <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
-                <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
+                <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2021 molorosh</p></div>
               </div>
             </footer>
           </div>

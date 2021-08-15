@@ -18,6 +18,11 @@ class About extends Component {
                 <ul>
                     <li>Some UX updates were made to the application.</li>
                 </ul>
+                <h4>V 1.1.0.1 @ 15 August 2021</h4>
+                <ul>
+                    <li>Fixed a navigtion error witht the 'about' and 'help' buttons.</li>
+                    <li>Fixed a rogue '2019' date to '2021'.</li>
+                </ul>
                 <p>&copy; 2021 molorosh</p>
                 <p>
                     <button 

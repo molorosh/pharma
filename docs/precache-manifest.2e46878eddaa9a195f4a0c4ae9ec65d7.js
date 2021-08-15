@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "41d7c361158a1d455bec",
+    "revision": "317ff350ba3db81bbd0d",
     "url": "/pharma/static/css/main.b096ba44.chunk.css"
   },
   {
-    "revision": "41d7c361158a1d455bec",
-    "url": "/pharma/static/js/main.4af3252b.chunk.js"
+    "revision": "317ff350ba3db81bbd0d",
+    "url": "/pharma/static/js/main.cbdc1864.chunk.js"
   },
   {
     "revision": "09b9cd5cdf6f6a72cebc",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/pharma/static/media/logo.c695c8b2.svg"
   },
   {
-    "revision": "40495613b5eb001f36a7027b911c3d9e",
+    "revision": "4ac9b1dc5c835679d80e19fbf2f97b57",
     "url": "/pharma/index.html"
   }
 ];
