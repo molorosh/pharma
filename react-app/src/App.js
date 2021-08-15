@@ -21,7 +21,7 @@ class App extends Component {
         personId: undefined,
         // medicineId: the primary key of the medicine to be added, edited or deleted
         medicineId: undefined,
-        version: "1.0.0.0",
+        version: "1.1.0.0",
         meds: [],
     }
   }
@@ -352,21 +352,25 @@ class App extends Component {
       }
       return (
         <div className="App">
-        <header className="App-header">
-          <div className="App-header-div">
-            <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
-            <div className="App-header-div-title"><h1>Pharma</h1></div>
-          </div>
-        </header>
-        <section className="AppSection">
-          {editControl}
-        </section>
-        <footer className="App-footer">
+          <div id="mainContent">
+            <header className="App-header">
+              <div className="App-header-div">
+                <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
+                <div className="App-header-div-title"><h1>Pharma</h1></div>
+              </div>
+            </header>
+            <section className="AppSection">
+              {editControl}
+            </section>
+        </div>
+        <div id="footerContent">
+          <footer className="App-footer">
             <div className="App-footer-div">
               <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
-              <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
+              <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2021 molorosh</p></div>
             </div>
           </footer>
+        </div>
       </div>    
       );
     }
@@ -447,7 +451,7 @@ class App extends Component {
                     className="pharma-btn pharma-btn-delete" >Delete Person</button>
                 </p>
                 <h1>{p.icon} {p.name}</h1>
-                <h4><span role="img" aria-label="Medicine">💊</span> Medicines</h4>
+                <h4><span className="emoji-prefix" role="img" aria-label="Medicine">💊</span> Medicines</h4>
                 <p>
                   <button 
                     onClick={() => {this.doEditMedicine(p.id, undefined);}} 
@@ -463,29 +467,33 @@ class App extends Component {
       
     return (
       <div className="App">
-        <header className="App-header">
-          <div className="App-header-div">
-            <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
-            <div className="App-header-div-title"><h1>Pharma</h1></div>
+        <div id="mainContent">
+          <header className="App-header">
+            <div className="App-header-div">
+              <div className="App-header-div-logo"><img src={logo} className="App-logo" alt="logo" /></div>
+              <div className="App-header-div-title"><h1>Pharma</h1></div>
+            </div>
+          </header>
+          <section className="AppSection">
+              <h3><span className="emoji-prefix" role="img" aria-label="People">👥</span>People</h3>
+              <div className="theHelp"><button className="pharma-btn pharma-btn-help" onClick={this.doShowHelp}>Help</button></div>
+              <div className="theAbout"><button className="pharma-btn pharma-btn-about" onClick={this.doShowAbout}>About</button></div>
+              <p>
+                <button className="pharma-btn pharma-btn-add" onClick={() => { this.doEditUser(undefined) }}>New Person</button>
+              </p>
+              <div>
+                {personsHtml}
+              </div>
+            </section>
           </div>
-        </header>
-        <section className="AppSection">
-            <h3><span role="img" aria-label="People">👥</span> People</h3>
-            <div className="theHelp"><button className="pharma-btn pharma-btn-help" onClick={this.doShowHelp}>Help</button></div>
-            <div className="theAbout"><button className="pharma-btn pharma-btn-about" onClick={this.doShowAbout}>About</button></div>
-            <p>
-              <button className="pharma-btn pharma-btn-add" onClick={() => { this.doEditUser(undefined) }}>New Person</button>
-            </p>
-            <div>
-              {personsHtml}
-            </div>
-          </section>
-          <footer className="App-footer">
-            <div className="App-footer-div">
-              <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
-              <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
-            </div>
-          </footer>
+          <div id="footerContent">
+            <footer className="App-footer">
+              <div className="App-footer-div">
+                <div className="App-footer-version"><p className="App-footer-version">Version: <span className="App-footer-version">{this.state.version}</span></p></div>
+                <div className="App-footer-copyright"><p className="App-footer-copyright">&copy; 2019 molorosh</p></div>
+              </div>
+            </footer>
+          </div>
       </div>
     );
   }
